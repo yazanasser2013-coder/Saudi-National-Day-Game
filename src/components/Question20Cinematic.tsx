@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Skull, Flag } from "lucide-react";
-import { useAudio } from "../hooks/useAudio";
 
 export function Question20Cinematic({
   onComplete,

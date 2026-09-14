@@ -1,6 +1,5 @@
-@import "tailwindcss";
-
 @import url("https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap");
+@import "tailwindcss";
 
 @theme {
   --color-saudi-green: #003b24;
@@ -16,8 +15,8 @@ body {
   margin: 0;
   padding: 0;
   font-family: "Amiri", serif;
-  background-color: var(--color-saudi-black);
-  color: var(--color-saudi-white);
+  background-color: var(--bg-deep);
+  color: var(--text-white);
   direction: rtl;
   text-align: right;
 }
@@ -26,8 +25,8 @@ body {
   min-height: 100vh;
   background: radial-gradient(
     ellipse at center,
-    var(--color-saudi-green) 0%,
-    var(--color-saudi-black) 70%
+    var(--bg-green) 0%,
+    var(--bg-deep) 70%
   );
 }
 
@@ -38,7 +37,7 @@ body {
   background: rgba(0, 59, 36, 0.3);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-saudi-emerald);
+  background: var(--accent-emerald);
   border-radius: 4px;
 }
 
@@ -53,7 +52,6 @@ body {
     transform: scale(1.05);
   }
 }
-
 @keyframes float-particle {
   0%,
   100% {
@@ -65,7 +63,6 @@ body {
     opacity: 0.6;
   }
 }
-
 @keyframes count-up {
   from {
     opacity: 0;
@@ -76,7 +73,6 @@ body {
     transform: translateY(0);
   }
 }
-
 @keyframes shake {
   0%,
   100% {
@@ -89,7 +85,6 @@ body {
     transform: translateX(8px);
   }
 }
-
 @keyframes slide-up {
   from {
     opacity: 0;
@@ -100,7 +95,6 @@ body {
     transform: translateY(0);
   }
 }
-
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -109,7 +103,6 @@ body {
     opacity: 1;
   }
 }
-
 @keyframes scale-in {
   from {
     opacity: 0;
@@ -126,27 +119,22 @@ body {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: var(--color-saudi-gold);
+  background: var(--accent-gold);
   opacity: 0.5;
   animation: float-particle 6s ease-in-out infinite;
 }
-
 .pulse-glow {
   animation: pulse-glow 1.5s ease-in-out infinite;
 }
-
 .shake {
   animation: shake 0.4s ease-in-out;
 }
-
 .slide-up {
   animation: slide-up 0.4s ease-out;
 }
-
 .fade-in {
   animation: fade-in 0.3s ease-out;
 }
-
 .scale-in {
   animation: scale-in 0.3s ease-out;
 }
