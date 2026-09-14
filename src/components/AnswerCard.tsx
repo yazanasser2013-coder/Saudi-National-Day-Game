@@ -14,7 +14,6 @@ interface AnswerCardProps {
 }
 
 export function AnswerCard({
-  index,
   text,
   isSelected,
   isCorrect,
