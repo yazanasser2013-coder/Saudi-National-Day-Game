@@ -25,8 +25,4 @@ export default defineConfig({
     sourcemap: false,
     chunkSizeWarningLimit: 1000,
   },
-
-  optimizeDeps: {
-    include: ["react", "react-dom"],
-  },
 });
