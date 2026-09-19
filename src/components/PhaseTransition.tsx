@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Skull, AlertTriangle, Zap } from "lucide-react";
+import { Skull, AlertTriangle, Zap, Crown } from "lucide-react";
 import { useGame } from "../context/game-context";
 import { useAudio } from "../hooks/useAudio";
 
 const messages = [
-  { text: "يا أستاذ...", delay: 0.5, icon: AlertTriangle },
-  { text: "اختار أدفر وأقوى الطلاب عندك.", delay: 2.5, icon: null },
-  { text: "لأن اللي جاي مااا يرحم. 💀", delay: 4.5, icon: Skull },
-  { text: "10 أسئلة. 10 ثوانٍ. والغلط غالي.", delay: 6.5, icon: Zap },
+  { text: "يا أستاذ...", delay: 0.5, icon: AlertTriangle, iconColor: "text-amber-400" },
+  { text: "اختار أدفر وأقوى الطلاب عندك.", delay: 2.5, icon: null, iconColor: "" },
+  { text: "لأن اللي جاي مااا يرحم. 💀", delay: 4.5, icon: Skull, iconColor: "text-saudi-red" },
+  { text: "10 أسئلة. 10 ثوانٍ. والغلط غالي.", delay: 6.5, icon: Zap, iconColor: "text-amber-400" },
 ];
 
 interface PhaseTransitionProps {
@@ -78,7 +78,25 @@ export function PhaseTransition({ onComplete }: PhaseTransitionProps) {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
       />
+
+      {/* Atmospheric background */}
       <div className="absolute inset-0 pointer-events-none">
+        {/* Red warning glow */}
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(217,74,17,0.08) 0%, transparent 70%)" }}
+          animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 4, repeat: Infinity }}
+        />
+
+        {/* Pulsing border frame */}
+        <motion.div
+          className="absolute inset-8 border border-saudi-red/10 rounded-3xl"
+          animate={{ borderColor: ["rgba(217,74,17,0.05)", "rgba(217,74,17,0.2)", "rgba(217,74,17,0.05)"] }}
+          transition={{ duration: 3, repeat: Infinity }}
+        />
+
+        {/* Particles */}
         {particles.map((particle) => (
           <motion.div
             key={particle.id}
@@ -101,6 +119,7 @@ export function PhaseTransition({ onComplete }: PhaseTransitionProps) {
           />
         ))}
       </div>
+
       <motion.div
         className="relative z-10 text-center max-w-2xl px-4"
         initial={{ opacity: 0, scale: 0.9 }}
@@ -117,20 +136,19 @@ export function PhaseTransition({ onComplete }: PhaseTransitionProps) {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
             >
-              {messages[currentMessage].icon &&
-                (() => {
-                  const Icon = messages[currentMessage].icon;
-                  return (
-                    <motion.div
-                      className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-saudi-red/20 border-2 border-saudi-red mb-4"
-                      initial={{ scale: 0, rotate: -180 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      transition={{ duration: 0.6, ease: "easeOut" }}
-                    >
-                      <Icon className="w-8 h-8 md:w-10 md:h-10 text-saudi-red" />
-                    </motion.div>
-                  );
-                })()}
+              {messages[currentMessage].icon && (
+                <motion.div
+                  className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-saudi-red/20 border-2 border-saudi-red mb-4"
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                >
+                  {(() => {
+                    const Icon = messages[currentMessage].icon!;
+                    return <Icon className={`w-8 h-8 md:w-10 md:h-10 ${messages[currentMessage].iconColor}`} />;
+                  })()}
+                </motion.div>
+              )}
               <motion.h2
                 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight text-saudi-white"
                 initial={{ opacity: 0, y: 10 }}
@@ -144,29 +162,47 @@ export function PhaseTransition({ onComplete }: PhaseTransitionProps) {
         </AnimatePresence>
 
         {showButton && (
-          <motion.button
-            onClick={handleReady}
-            onMouseEnter={playHover}
-            className="group relative inline-flex items-center gap-3 px-10 py-4 bg-saudi-red text-saudi-white font-bold text-lg rounded-full overflow-hidden shadow-[0_0_30px_rgba(217,74,17,0.4)] hover:shadow-[0_0_50px_rgba(217,74,17,0.6)] transition-all duration-300"
+          <motion.div
+            className="flex flex-col items-center gap-4"
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            whileHover={{ scale: 1.03, y: -2 }}
-            whileTap={{ scale: 0.98 }}
           >
-            <span className="relative z-10">أنا مستعد</span>
-            <motion.span
-              className="absolute right-6 top-1/2 -translate-y-1/2"
-              animate={{ x: [0, 8, 0] }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
+            {/* THE FINAL FIVE badge */}
+            <motion.div
+              className="inline-flex items-center gap-3 px-6 py-3 bg-saudi-red/20 border-2 border-saudi-red rounded-full"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
             >
-              <Zap className="w-5 h-5" />
-            </motion.span>
-          </motion.button>
+              <Crown className="w-6 h-6 text-amber-400" />
+              <span className="text-xl md:text-2xl font-bold text-saudi-red tracking-widest uppercase">
+                THE FINAL FIVE
+              </span>
+              <Crown className="w-6 h-6 text-amber-400" />
+            </motion.div>
+
+            <motion.button
+              onClick={handleReady}
+              onMouseEnter={playHover}
+              className="group relative inline-flex items-center gap-3 px-10 py-4 bg-saudi-red text-saudi-white font-bold text-lg rounded-full overflow-hidden shadow-[0_0_30px_rgba(217,74,17,0.4)] hover:shadow-[0_0_50px_rgba(217,74,17,0.6)] transition-all duration-300"
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span className="relative z-10">أنا مستعد</span>
+              <motion.span
+                className="absolute right-6 top-1/2 -translate-y-1/2"
+                animate={{ x: [0, 8, 0] }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <Zap className="w-5 h-5" />
+              </motion.span>
+            </motion.button>
+          </motion.div>
         )}
 
         {showCountdown && (

@@ -1,21 +1,18 @@
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { GameProvider } from "./context/GameContext";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { LandingScreen } from "./components/LandingScreen";
-import { PlayerJoin } from "./components/PlayerJoin";
 import { GameShell } from "./components/GameShell";
+import { CustomCursor } from "./components/CustomCursor";
 
 function App() {
   return (
-    <GameProvider>
-      <BrowserRouter>
+    <HashRouter>
+      <GameProvider>
+        <CustomCursor />
         <Routes>
-          <Route path="/" element={<LandingScreen />} />
-          <Route path="/join" element={<PlayerJoin />} />
-          <Route path="/game" element={<GameShell />} />
-          <Route path="/ready" element={<GameShell />} />
+          <Route path="/*" element={<GameShell />} />
         </Routes>
-      </BrowserRouter>
-    </GameProvider>
+      </GameProvider>
+    </HashRouter>
   );
 }
 

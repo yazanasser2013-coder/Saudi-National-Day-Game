@@ -131,5 +131,13 @@ export function useAudio() {
       { freq: 150, dur: 0.2, delay: 150 },
     ]);
   }, [state.soundEnabled]);
-  return { playClick, playHover, playWrong };
+  const playCorrect = useCallback(() => {
+    if (!state.soundEnabled || !AUDIO_CONTEXT) return;
+    playSequence([
+      { freq: 523, dur: 0.08, delay: 0 },
+      { freq: 659, dur: 0.08, delay: 80 },
+      { freq: 784, dur: 0.15, delay: 160 },
+    ]);
+  }, [state.soundEnabled]);
+  return { playClick, playHover, playWrong, playCorrect };
 }

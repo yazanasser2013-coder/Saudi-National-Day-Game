@@ -5,9 +5,9 @@ import {
 } from "react";
 import type { GameState, GameAction } from "../types/game";
 import { getGameQuestions } from "../data/questions";
-import { calculateScore } from "../utils/scoring";
-import { sanitizeName } from "../utils/scoring";
+import { calculateScore, sanitizeName } from "../utils/scoring";
 import { GameContext } from "./game-context";
+import { saveToLeaderboard } from "../utils/leaderboard";
 
 const initialState: GameState = {
   player: null,
@@ -170,8 +170,20 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     }
     case "NEXT_QUESTION": {
       const nextIndex = state.currentQuestionIndex + 1;
-      if (nextIndex >= state.questions.length)
+      if (nextIndex >= state.questions.length) {
+        if (state.player) {
+          saveToLeaderboard({
+            name: state.player.name,
+            score: state.score,
+            correctAnswers: state.correctAnswers,
+            totalQuestions: state.questions.length,
+            averageTime: state.averageAnswerTime,
+            fastestAnswer: state.fastestAnswer === Infinity ? 999 : state.fastestAnswer,
+            percentage: Math.round((state.correctAnswers / state.questions.length) * 100),
+          });
+        }
         return { ...state, gameStatus: "results" };
+      }
       const nextQuestion = state.questions[nextIndex];
       return {
         ...state,
@@ -186,8 +198,20 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       return { ...state, phase: 3, gameStatus: "final-stage" };
     case "SHOW_QUESTION_20":
       return { ...state, gameStatus: "question-20" };
-    case "END_GAME":
+    case "END_GAME": {
+      if (state.player) {
+        saveToLeaderboard({
+          name: state.player.name,
+          score: state.score,
+          correctAnswers: state.correctAnswers,
+          totalQuestions: state.questions.length,
+          averageTime: state.averageAnswerTime,
+          fastestAnswer: state.fastestAnswer === Infinity ? 999 : state.fastestAnswer,
+          percentage: Math.round((state.correctAnswers / state.questions.length) * 100),
+        });
+      }
       return { ...state, gameStatus: "results" };
+    }
     case "RESET_GAME":
       return { ...initialState, soundEnabled: state.soundEnabled };
     case "TOGGLE_SOUND":
@@ -233,6 +257,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const toggleSound = useCallback(() => {
     dispatch({ type: "TOGGLE_SOUND" });
   }, []);
+  const exitGame = useCallback(() => {
+    dispatch({ type: "RESET_GAME" });
+  }, []);
   return (
     <GameContext.Provider
       value={{
@@ -241,6 +268,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
         answerQuestion,
         startGame,
         resetGame,
+        exitGame,
         goToJoin,
         toggleSound,
       }}

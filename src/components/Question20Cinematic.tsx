@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Skull, Flag } from "lucide-react";
+import { Skull, Flag, Crown, Zap } from "lucide-react";
 
 const stages = [
   { text: "🇸🇦 السؤال الأخير", delay: 500 },
   { text: "20 / 20", delay: 2000 },
-  { text: "إذا كنت تعرف الإجابة...\\nأثبتها.", delay: 3500 },
-  { text: "☠️ FINAL QUESTION", delay: 5500 },
+  { text: "إذا كنت تعرف الإجابة...\nأثبتها.", delay: 3500 },
+  { text: "THE FINAL TEST", delay: 5500 },
 ];
 
 export function Question20Cinematic({
@@ -28,6 +28,7 @@ export function Question20Cinematic({
       duration: 2 + Math.random() * 2,
     })),
   );
+
   useEffect(() => {
     const timeouts = stages.map((s, i) =>
       setTimeout(() => {
@@ -45,6 +46,7 @@ export function Question20Cinematic({
       clearTimeout(finalTimeout);
     };
   }, [onComplete]);
+
   return (
     <div className="app min-h-screen flex items-center justify-center relative overflow-hidden">
       <motion.div
@@ -53,6 +55,33 @@ export function Question20Cinematic({
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       />
+
+      {/* Atmospheric red glow for final question */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(217,74,17,0.06) 0%, transparent 60%)" }}
+        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+        transition={{ duration: 5, repeat: Infinity }}
+      />
+
+      {/* Geometric lines */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <motion.div
+          className="absolute top-1/2 left-0 h-[1px] w-full -translate-y-1/2"
+          style={{ background: "linear-gradient(90deg, transparent, rgba(217,74,17,0.15), transparent)" }}
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 2, delay: 1 }}
+        />
+        <motion.div
+          className="absolute left-1/2 top-0 w-[1px] h-full -translate-x-1/2"
+          style={{ background: "linear-gradient(180deg, transparent, rgba(201,162,39,0.15), transparent)" }}
+          initial={{ scaleY: 0 }}
+          animate={{ scaleY: 1 }}
+          transition={{ duration: 2, delay: 1.3 }}
+        />
+      </div>
+
       <div className="absolute inset-0 pointer-events-none">
         {particles.map((particle) => (
           <motion.div
@@ -77,6 +106,7 @@ export function Question20Cinematic({
           />
         ))}
       </div>
+
       <motion.div
         className="relative z-10 text-center px-4"
         initial={{ opacity: 0 }}
@@ -131,15 +161,34 @@ export function Question20Cinematic({
               )}
               {stage === 4 && (
                 <motion.div
-                  className="inline-flex items-center gap-3 px-6 py-3 bg-saudi-red/20 border-2 border-saudi-red rounded-full"
+                  className="flex flex-col items-center gap-4"
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ duration: 0.5, type: "spring" }}
                 >
-                  <Skull className="w-8 h-8 text-saudi-red animate-pulse" />
-                  <span className="text-2xl md:text-3xl font-bold text-saudi-red tracking-widest">
-                    FINAL QUESTION
-                  </span>
+                  {/* Crown icons flanking */}
+                  <div className="flex items-center gap-4">
+                    <Crown className="w-6 h-6 text-amber-400" />
+                    <Skull className="w-10 h-10 text-saudi-red animate-pulse" />
+                    <Crown className="w-6 h-6 text-amber-400" />
+                  </div>
+
+                  <div className="inline-flex items-center gap-3 px-8 py-4 bg-saudi-red/20 border-2 border-saudi-red rounded-full animate-glow-red">
+                    <Zap className="w-6 h-6 text-amber-400" />
+                    <span className="text-2xl md:text-3xl font-bold text-saudi-red tracking-widest">
+                      THE FINAL TEST
+                    </span>
+                    <Zap className="w-6 h-6 text-amber-400" />
+                  </div>
+
+                  <motion.p
+                    className="text-saudi-white/50 text-sm tracking-wider"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    لا مجال للخطأ. هذا سؤالك الأخير.
+                  </motion.p>
                 </motion.div>
               )}
             </motion.div>

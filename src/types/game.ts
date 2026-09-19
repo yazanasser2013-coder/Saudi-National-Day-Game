@@ -80,10 +80,7 @@ export type GameAction =
   | { type: "PHASE_TRANSITION" }
   | { type: "ENTER_FINAL_STAGE" }
   | { type: "SHOW_QUESTION_20" }
-  | {
-      type: "END_GAME";
-      payload: { rank: number; leaderboard: LeaderboardEntry[] };
-    }
+  | { type: "END_GAME" }
   | { type: "RESET_GAME" }
   | { type: "TOGGLE_SOUND" }
   | { type: "SET_LEADERBOARD"; payload: LeaderboardEntry[] };
