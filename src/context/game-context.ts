@@ -7,6 +7,7 @@ export const GameContext = createContext<{
   answerQuestion: (answerIndex: number) => void;
   startGame: () => void;
   resetGame: () => void;
+  goToJoin: () => void;
   toggleSound: () => void;
 } | null>(null);
 

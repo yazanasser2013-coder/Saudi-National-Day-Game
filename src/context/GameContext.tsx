@@ -30,6 +30,12 @@ const initialState: GameState = {
 
 function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
+    case "GO_TO_JOIN": {
+      return {
+        ...state,
+        gameStatus: "join",
+      };
+    }
     case "SET_PLAYER": {
       const name = sanitizeName(action.payload.name);
       return {
@@ -221,6 +227,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const resetGame = useCallback(() => {
     dispatch({ type: "RESET_GAME" });
   }, []);
+  const goToJoin = useCallback(() => {
+    dispatch({ type: "GO_TO_JOIN" });
+  }, []);
   const toggleSound = useCallback(() => {
     dispatch({ type: "TOGGLE_SOUND" });
   }, []);
@@ -232,6 +241,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
         answerQuestion,
         startGame,
         resetGame,
+        goToJoin,
         toggleSound,
       }}
     >

@@ -61,6 +61,7 @@ export interface LeaderboardEntry {
 }
 
 export type GameAction =
+  | { type: "GO_TO_JOIN" }
   | { type: "SET_PLAYER"; payload: { name: string } }
   | { type: "START_GAME" }
   | { type: "START_QUESTION"; payload: { question: Question } }
