@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Skull, AlertTriangle, Zap } from "lucide-react";
-import { useGame } from "../context/GameContext";
+import { useGame } from "../context/game-context";
 import { useAudio } from "../hooks/useAudio";
 
 const messages = [
@@ -22,6 +22,18 @@ export function PhaseTransition({ onComplete }: PhaseTransitionProps) {
   const [showCountdown, setShowCountdown] = useState(false);
   const [countdown, setCountdown] = useState(3);
   const [showButton, setShowButton] = useState(false);
+  const [particles] = useState(() =>
+    Array.from({ length: 30 }, (_, id) => ({
+      id,
+      left: Math.random() * 100 + "%",
+      top: Math.random() * 100 + "%",
+      width: Math.random() * 6 + 2 + "px",
+      height: Math.random() * 6 + 2 + "px",
+      animationDelay: Math.random() * 3 + "s",
+      animationDuration: 3 + Math.random() * 3 + "s",
+      duration: 3 + Math.random() * 3,
+    })),
+  );
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -67,22 +79,22 @@ export function PhaseTransition({ onComplete }: PhaseTransitionProps) {
         transition={{ duration: 0.8 }}
       />
       <div className="absolute inset-0 pointer-events-none">
-        {Array.from({ length: 30 }, (_, i) => (
+        {particles.map((particle) => (
           <motion.div
-            key={i}
+            key={particle.id}
             className="particle"
             style={{
-              left: Math.random() * 100 + "%",
-              top: Math.random() * 100 + "%",
-              width: Math.random() * 6 + 2 + "px",
-              height: Math.random() * 6 + 2 + "px",
-              animationDelay: Math.random() * 3 + "s",
-              animationDuration: 3 + Math.random() * 3 + "s",
+              left: particle.left,
+              top: particle.top,
+              width: particle.width,
+              height: particle.height,
+              animationDelay: particle.animationDelay,
+              animationDuration: particle.animationDuration,
             }}
             initial={{ opacity: 0 }}
             animate={{ opacity: [0.2, 0.5, 0.2] }}
             transition={{
-              duration: 3 + Math.random() * 3,
+              duration: particle.duration,
               repeat: Infinity,
               ease: "easeInOut",
             }}

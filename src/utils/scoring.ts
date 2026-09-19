@@ -29,7 +29,7 @@ export function sanitizeName(name: string): string {
   return name
     .trim()
     .slice(0, 20)
-    .replace(/[<>\"'"&]/g, "");
+    .replace(/[<>"'&]/g, "");
 }
 
 export function getPerformanceTitle(

@@ -9,7 +9,7 @@ import {
   Crown,
   Sparkles,
 } from "lucide-react";
-import { useGame } from "../context/GameContext";
+import { useGame } from "../context/game-context";
 import { useAudio } from "../hooks/useAudio";
 import {
   formatScore,
@@ -68,76 +68,61 @@ export function ResultReveal({
 
   const [stage, setStage] = useState(0);
   const [animatedScore, setAnimatedScore] = useState(0);
-  const [showCelebration, setShowCelebration] = useState(false);
+  const [particles] = useState(() =>
+    Array.from({ length: 50 }, (_, id) => ({
+      id,
+      width: Math.random() * 8 + 4 + "px",
+      height: Math.random() * 8 + 4 + "px",
+      background: ["#C9A227", "#00A651", "#F5F7F4", "#D94A11"][
+        Math.floor(Math.random() * 4)
+      ],
+      x: (Math.random() - 0.5) * 400,
+      y: (Math.random() - 0.5) * 400 - 200,
+    })),
+  );
 
   const { title: performanceTitle, emoji: performanceEmoji } =
     getPerformanceTitle(state.score, MAX_POSSIBLE_SCORE);
 
   const isWinner = rank === 1;
+  const showCelebration = isWinner && stage >= 5;
   const celebration = celebrations.find((c) => c.threshold === rank);
 
   useEffect(() => {
-    const stages = [
-      () => setTimeout(() => setStage(1), 500),
+    if (stage >= 6) return;
 
-      () => {
-        const duration = 1500;
-        const start = Date.now();
+    let timeout: ReturnType<typeof setTimeout>;
+    let animationFrame: number;
 
-        const animate = () => {
-          const elapsed = Date.now() - start;
-          const progress = Math.min(elapsed / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3);
+    if (stage === 1) {
+      const duration = 1500;
+      const start = Date.now();
 
-          setAnimatedScore(Math.round(state.score * eased));
+      const animate = () => {
+        const elapsed = Date.now() - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
 
-          if (progress < 1) {
-            requestAnimationFrame(animate);
-          } else {
-            setAnimatedScore(state.score);
+        setAnimatedScore(Math.round(state.score * eased));
 
-            setTimeout(() => setStage(2), 300);
-          }
-        };
-
-        requestAnimationFrame(animate);
-      },
-
-      () => setTimeout(() => setStage(3), 400),
-
-      () => setTimeout(() => setStage(4), 400),
-
-      () => setTimeout(() => setStage(5), 400),
-
-      () => {
-        if (isWinner) {
-          setShowCelebration(true);
+        if (progress < 1) {
+          animationFrame = requestAnimationFrame(animate);
+        } else {
+          setAnimatedScore(state.score);
+          timeout = setTimeout(() => setStage(2), 300);
         }
+      };
 
-        setTimeout(() => setStage(6), 400);
-      },
-    ];
+      animationFrame = requestAnimationFrame(animate);
+    } else {
+      timeout = setTimeout(() => setStage(stage + 1), stage === 0 ? 500 : 400);
+    }
 
-    stages[0]();
-
-    let currentStage = 0;
-
-    const nextStage = () => {
-      currentStage++;
-
-      if (currentStage < stages.length) {
-        stages[currentStage]();
-      }
+    return () => {
+      clearTimeout(timeout);
+      cancelAnimationFrame(animationFrame);
     };
-
-    const interval = setInterval(() => {
-      if (stage > currentStage) {
-        nextStage();
-      }
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, [state.score, isWinner, rank]);
+  }, [stage, state.score]);
 
   const handleRestart = () => {
     playClick();
@@ -150,18 +135,16 @@ export function ResultReveal({
 
       {showCelebration && (
         <div className="absolute inset-0 pointer-events-none">
-          {Array.from({ length: 50 }, (_, i) => (
+          {particles.map((particle) => (
             <motion.div
-              key={i}
+              key={particle.id}
               className="particle"
               style={{
                 left: "50%",
                 top: "50%",
-                width: Math.random() * 8 + 4 + "px",
-                height: Math.random() * 8 + 4 + "px",
-                background: ["#C9A227", "#00A651", "#F5F7F4", "#D94A11"][
-                  Math.floor(Math.random() * 4)
-                ],
+                width: particle.width,
+                height: particle.height,
+                background: particle.background,
               }}
               initial={{
                 x: 0,
@@ -170,8 +153,8 @@ export function ResultReveal({
                 opacity: 1,
               }}
               animate={{
-                x: (Math.random() - 0.5) * 400,
-                y: (Math.random() - 0.5) * 400 - 200,
+                x: particle.x,
+                y: particle.y,
                 scale: 1,
                 opacity: 0,
               }}

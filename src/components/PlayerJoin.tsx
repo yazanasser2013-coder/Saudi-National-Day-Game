@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { User, ArrowRight } from "lucide-react";
-import { useGame } from "../context/GameContext";
+import { useGame } from "../context/game-context";
 import { useAudio } from "../hooks/useAudio";
 
 export function PlayerJoin() {

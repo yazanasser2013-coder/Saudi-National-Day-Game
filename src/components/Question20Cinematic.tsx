@@ -2,18 +2,32 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Skull, Flag } from "lucide-react";
 
+const stages = [
+  { text: "🇸🇦 السؤال الأخير", delay: 500 },
+  { text: "20 / 20", delay: 2000 },
+  { text: "إذا كنت تعرف الإجابة...\\nأثبتها.", delay: 3500 },
+  { text: "☠️ FINAL QUESTION", delay: 5500 },
+];
+
 export function Question20Cinematic({
   onComplete,
 }: {
   onComplete: () => void;
 }) {
   const [stage, setStage] = useState(0);
-  const stages = [
-    { text: "🇸🇦 السؤال الأخير", delay: 500 },
-    { text: "20 / 20", delay: 2000 },
-    { text: "إذا كنت تعرف الإجابة...\\nأثبتها.", delay: 3500 },
-    { text: "☠️ FINAL QUESTION", delay: 5500 },
-  ];
+  const [particles] = useState(() =>
+    Array.from({ length: 40 }, (_, id) => ({
+      id,
+      left: Math.random() * 100 + "%",
+      top: Math.random() * 100 + "%",
+      width: Math.random() * 8 + 3 + "px",
+      height: Math.random() * 8 + 3 + "px",
+      animationDelay: Math.random() * 2 + "s",
+      animationDuration: 2 + Math.random() * 2 + "s",
+      background: id % 3 === 0 ? "#C9A227" : "#00A651",
+      duration: 2 + Math.random() * 2,
+    })),
+  );
   useEffect(() => {
     const timeouts = stages.map((s, i) =>
       setTimeout(() => {
@@ -40,23 +54,23 @@ export function Question20Cinematic({
         transition={{ duration: 0.5 }}
       />
       <div className="absolute inset-0 pointer-events-none">
-        {Array.from({ length: 40 }, (_, i) => (
+        {particles.map((particle) => (
           <motion.div
-            key={i}
+            key={particle.id}
             className="particle"
             style={{
-              left: Math.random() * 100 + "%",
-              top: Math.random() * 100 + "%",
-              width: Math.random() * 8 + 3 + "px",
-              height: Math.random() * 8 + 3 + "px",
-              animationDelay: Math.random() * 2 + "s",
-              animationDuration: 2 + Math.random() * 2 + "s",
-              background: i % 3 === 0 ? "#C9A227" : "#00A651",
+              left: particle.left,
+              top: particle.top,
+              width: particle.width,
+              height: particle.height,
+              animationDelay: particle.animationDelay,
+              animationDuration: particle.animationDuration,
+              background: particle.background,
             }}
             initial={{ opacity: 0 }}
             animate={{ opacity: [0.3, 0.7, 0.3] }}
             transition={{
-              duration: 2 + Math.random() * 2,
+              duration: particle.duration,
               repeat: Infinity,
               ease: "easeInOut",
             }}

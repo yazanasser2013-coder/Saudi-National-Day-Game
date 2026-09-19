@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from "react";
-import { useGame } from "../context/GameContext";
+import { useGame } from "../context/game-context";
 const AUDIO_CONTEXT =
   typeof window !== "undefined"
     ? new (window.AudioContext || (window as any).webkitAudioContext)()

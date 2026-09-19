@@ -64,7 +64,7 @@ export type GameAction =
   | { type: "SET_PLAYER"; payload: { name: string } }
   | { type: "START_GAME" }
   | { type: "START_QUESTION"; payload: { question: Question } }
-  | { type: "TICK_TIMER" }
+  | { type: "TICK_TIMER"; payload: { timeRemaining: number } }
   | {
       type: "ANSWER_QUESTION";
       payload: {

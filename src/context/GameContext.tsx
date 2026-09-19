@@ -1,6 +1,4 @@
 import {
-  createContext,
-  useContext,
   useReducer,
   useCallback,
   type ReactNode,
@@ -9,6 +7,7 @@ import type { GameState, GameAction } from "../types/game";
 import { getGameQuestions } from "../data/questions";
 import { calculateScore } from "../utils/scoring";
 import { sanitizeName } from "../utils/scoring";
+import { GameContext } from "./game-context";
 
 const initialState: GameState = {
   player: null,
@@ -55,6 +54,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         questions,
+        timeRemaining: questions[0].timeLimit,
+        questionStartedAt: Date.now(),
         currentQuestionIndex: 0,
         phase: 1,
         score: 0,
@@ -86,12 +87,16 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       if (state.timeRemaining <= 0) return state;
       return {
         ...state,
-        timeRemaining: Math.max(0, state.timeRemaining - 0.1),
+        timeRemaining: action.payload.timeRemaining,
       };
     }
     case "ANSWER_QUESTION": {
       const { responseTime, correct, points } = action.payload;
       const currentQuestion = state.questions[state.currentQuestionIndex];
+      if (
+        !currentQuestion ||
+        state.answeredQuestions.some((question) => question.id === currentQuestion.id)
+      ) return state;
       const newResponseTimes = [...state.responseTimes, responseTime];
       const fastestAnswer = Math.min(state.fastestAnswer, responseTime);
       const averageAnswerTime =
@@ -135,6 +140,10 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     }
     case "TIMEOUT": {
       const currentQuestion = state.questions[state.currentQuestionIndex];
+      if (
+        !currentQuestion ||
+        state.answeredQuestions.some((question) => question.id === currentQuestion.id)
+      ) return state;
       const updatedPlayer = state.player
         ? {
             ...state.player,
@@ -184,15 +193,6 @@ function gameReducer(state: GameState, action: GameAction): GameState {
   }
 }
 
-const GameContext = createContext<{
-  state: GameState;
-  dispatch: React.Dispatch<GameAction>;
-  answerQuestion: (answerIndex: number) => void;
-  startGame: () => void;
-  resetGame: () => void;
-  toggleSound: () => void;
-} | null>(null);
-
 export function GameProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(gameReducer, initialState);
   const answerQuestion = useCallback(
@@ -238,9 +238,4 @@ export function GameProvider({ children }: { children: ReactNode }) {
       {children}
     </GameContext.Provider>
   );
-}
-export function useGame() {
-  const context = useContext(GameContext);
-  if (!context) throw new Error("useGame must be used within a GameProvider");
-  return context;
 }

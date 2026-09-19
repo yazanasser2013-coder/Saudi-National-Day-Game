@@ -1,6 +1,6 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useGame } from "../context/GameContext";
+import { useGame } from "../context/game-context";
 import { useTimer } from "../hooks/useTimer";
 import { useAudio } from "../hooks/useAudio";
 import { LandingScreen } from "./LandingScreen";
@@ -43,24 +43,31 @@ export function GameShell() {
   );
   const [showPersonality, setShowPersonality] = useState(false);
   const [question20Cinematic, setQuestion20Cinematic] = useState(false);
-  const [finalRank, setFinalRank] = useState(1);
-  const [leaderboardData, setLeaderboardData] = useState<
-    Array<{
-      name: string;
-      score: number;
-      correctAnswers: number;
-      averageTime: number;
-    }>
-  >([]);
+  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [particles] = useState(() =>
+    Array.from({ length: 15 }, (_, id) => ({
+      id,
+      left: Math.random() * 100 + "%",
+      top: Math.random() * 100 + "%",
+      width: Math.random() * 4 + 2 + "px",
+      height: Math.random() * 4 + 2 + "px",
+      animationDelay: Math.random() * 8 + "s",
+      animationDuration: 6 + Math.random() * 6 + "s",
+      duration: 6 + Math.random() * 6,
+    })),
+  );
 
-  useTimer();
-  useAudio();
+  useEffect(() => () => {
+    if (advanceTimerRef.current !== null) {
+      clearTimeout(advanceTimerRef.current);
+    }
+  }, []);
 
   const currentQuestion = state.questions[state.currentQuestionIndex];
   const isFinalStage = state.phase === 3;
   const isQuestion20 = isFinalStage && state.currentQuestionIndex === 19;
 
-  useEffect(() => {
+  const { leaderboardData, finalRank } = useMemo(() => {
     if (state.gameStatus === "results" && state.player) {
       const mockLeaderboard = [
         { name: "Yazan", score: 18742, correctAnswers: 16, averageTime: 4.21 },
@@ -96,11 +103,12 @@ export function GameShell() {
           return b.correctAnswers - a.correctAnswers;
         return a.averageTime - b.averageTime;
       });
-      const rank =
-        allEntries.findIndex((e) => e.name === state.player?.name) + 1;
-      setLeaderboardData(allEntries);
-      setFinalRank(rank);
+      return {
+        leaderboardData: allEntries,
+        finalRank: allEntries.indexOf(playerEntry) + 1,
+      };
     }
+    return { leaderboardData: [], finalRank: 1 };
   }, [
     state.gameStatus,
     state.player,
@@ -111,7 +119,12 @@ export function GameShell() {
 
   const handleAnswer = useCallback(
     (index: number) => {
-      if (showResult || !currentQuestion) return;
+      if (
+        showResult ||
+        !currentQuestion ||
+        advanceTimerRef.current !== null ||
+        state.answeredQuestions.some((question) => question.id === currentQuestion.id)
+      ) return;
       setSelectedIndex(index);
       setShowResult(true);
       answerQuestion(index);
@@ -134,8 +147,9 @@ export function GameShell() {
         setPersonalityMessage(PERSONALITY_MESSAGES.slow[0]);
         setShowPersonality(true);
       }
-      setTimeout(
+      advanceTimerRef.current = setTimeout(
         () => {
+          advanceTimerRef.current = null;
           setShowResult(false);
           setSelectedIndex(null);
           setShowPersonality(false);
@@ -156,6 +170,7 @@ export function GameShell() {
       currentQuestion,
       showResult,
       state.questionStartedAt,
+      state.answeredQuestions,
       state.correctAnswers,
       state.currentQuestionIndex,
       state.phase,
@@ -166,51 +181,38 @@ export function GameShell() {
     ],
   );
 
-  useEffect(() => {
-    if (
-      state.timeRemaining <= 0 &&
-      state.gameStatus === "playing" &&
-      currentQuestion &&
-      !showResult
-    ) {
-      setShowResult(true);
-      setPersonalityMessage(PERSONALITY_MESSAGES.timeout[0]);
-      setShowPersonality(true);
-      playWrong();
-      setTimeout(() => {
-        setShowResult(false);
-        setShowPersonality(false);
-        setPersonalityMessage(null);
-        if (state.currentQuestionIndex === 9 && state.phase === 2) {
-          dispatch({ type: "PHASE_TRANSITION" });
-        } else if (isQuestion20 && !question20Cinematic) {
-          setQuestion20Cinematic(true);
-        } else {
-          dispatch({ type: "NEXT_QUESTION" });
-        }
-      }, 1500);
-    }
-  }, [
-    state.timeRemaining,
-    state.gameStatus,
-    currentQuestion,
-    showResult,
-    state.currentQuestionIndex,
-    state.phase,
-    isQuestion20,
-    question20Cinematic,
-    dispatch,
-    playWrong,
-  ]);
+  useTimer(() => {
+    if (showResult || advanceTimerRef.current !== null) return;
+    setShowResult(true);
+    setPersonalityMessage(PERSONALITY_MESSAGES.timeout[0]);
+    setShowPersonality(true);
+    playWrong();
+    advanceTimerRef.current = setTimeout(() => {
+      advanceTimerRef.current = null;
+      setShowResult(false);
+      setSelectedIndex(null);
+      setShowPersonality(false);
+      setPersonalityMessage(null);
+      if (state.currentQuestionIndex === 9 && state.phase === 2) {
+        dispatch({ type: "PHASE_TRANSITION" });
+      } else if (isQuestion20 && !question20Cinematic) {
+        setQuestion20Cinematic(true);
+      } else {
+        dispatch({ type: "NEXT_QUESTION" });
+      }
+    }, 1500);
+  });
 
+  const responseTime = state.responseTimes.at(-1);
   const speedBonus =
+    responseTime !== undefined &&
     selectedIndex !== null &&
     currentQuestion &&
     showResult &&
     selectedIndex === currentQuestion.correctAnswer
       ? calculateScore(
           currentQuestion.basePoints,
-          (Date.now() - state.questionStartedAt) / 1000,
+          responseTime,
           currentQuestion.timeLimit,
         ) - currentQuestion.basePoints
       : 0;
@@ -272,11 +274,7 @@ export function GameShell() {
         <ResultReveal
           rank={finalRank}
           leaderboard={leaderboardData}
-          onRestart={() => {
-            resetGame();
-            setFinalRank(1);
-            setLeaderboardData([]);
-          }}
+          onRestart={resetGame}
         />
         <SoundControl />
       </>
@@ -285,21 +283,14 @@ export function GameShell() {
   return (
     <div className="app min-h-screen relative">
       <div className="absolute inset-0 pointer-events-none opacity-10">
-        {Array.from({ length: 15 }, (_, i) => (
+        {particles.map(({ id, duration, ...style }) => (
           <motion.div
-            key={i}
+            key={id}
             className="particle"
-            style={{
-              left: Math.random() * 100 + "%",
-              top: Math.random() * 100 + "%",
-              width: Math.random() * 4 + 2 + "px",
-              height: Math.random() * 4 + 2 + "px",
-              animationDelay: Math.random() * 8 + "s",
-              animationDuration: 6 + Math.random() * 6 + "s",
-            }}
+            style={style}
             animate={{ opacity: [0.2, 0.5, 0.2] }}
             transition={{
-              duration: 6 + Math.random() * 6,
+              duration,
               repeat: Infinity,
               ease: "easeInOut",
             }}

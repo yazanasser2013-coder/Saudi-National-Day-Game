@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Volume2, VolumeX } from "lucide-react";
-import { useGame } from "../context/GameContext";
+import { useGame } from "../context/game-context";
 import { useAudio } from "../hooks/useAudio";
 
 export function SoundControl() {

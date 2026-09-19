@@ -1,47 +1,37 @@
-import { useEffect, useRef, useCallback } from "react";
-import { useGame } from "../context/GameContext";
-export function useTimer() {
+import { useEffect, useEffectEvent } from "react";
+import { useGame } from "../context/game-context";
+
+export function useTimer(onTimeout: () => void) {
   const { state, dispatch } = useGame();
-  const intervalRef = useRef<number | null>(null);
-  const lastTickRef = useRef<number>(Date.now());
-  useEffect(() => {
-    if (
-      state.gameStatus !== "playing" &&
-      state.gameStatus !== "final-stage" &&
-      state.gameStatus !== "question-20"
-    ) {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-      return;
-    }
-    if (state.timeRemaining <= 0) {
+  const currentQuestion = state.questions[state.currentQuestionIndex];
+  const isAnswered = state.answeredQuestions.some(
+    (question) => question.id === currentQuestion?.id,
+  );
+  const isPlaying =
+    state.gameStatus === "playing" ||
+    state.gameStatus === "final-stage" ||
+    state.gameStatus === "question-20";
+  const tick = useEffectEvent(() => {
+    if (isAnswered || !isPlaying) return false;
+    if (!currentQuestion) return false;
+    const timeRemaining = Math.max(
+      0,
+      currentQuestion.timeLimit - (Date.now() - state.questionStartedAt) / 1000,
+    );
+    if (timeRemaining <= 0) {
       dispatch({ type: "TIMEOUT" });
-      return;
+      onTimeout();
+      return false;
     }
-    intervalRef.current = window.setInterval(() => {
-      const now = Date.now();
-      const delta = (now - lastTickRef.current) / 1000;
-      lastTickRef.current = now;
-      dispatch({ type: "TICK_TIMER" });
-      if (state.timeRemaining - delta <= 0) {
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
-        }
-        dispatch({ type: "TIMEOUT" });
-      }
-    }, 50);
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    };
-  }, [state.gameStatus, state.timeRemaining, dispatch]);
-  const resetTimer = useCallback(() => {
-    lastTickRef.current = Date.now();
-  }, []);
-  return { resetTimer };
+    dispatch({ type: "TICK_TIMER", payload: { timeRemaining } });
+    return true;
+  });
+
+  useEffect(() => {
+    if (!isPlaying || !currentQuestion || isAnswered) return;
+    const interval = window.setInterval(() => {
+      if (!tick()) window.clearInterval(interval);
+    }, 100);
+    return () => window.clearInterval(interval);
+  }, [isPlaying, currentQuestion, isAnswered, state.questionStartedAt]);
 }
