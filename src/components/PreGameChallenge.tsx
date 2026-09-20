@@ -25,7 +25,7 @@ export function PreGameChallenge({ playerName, onComplete }: PreGameChallengePro
       setTimeout(() => {
         setCurrentChallenge(i);
         if (i === challenges.length - 1) {
-          setTimeout(() => setShowReady(true), 1000);
+          setShowReady(true);
         }
       }, c.delay),
     );

@@ -68,7 +68,7 @@ export function AnswerCard({
     <motion.button
       onClick={onClick}
       disabled={disabled}
-      className={`relative group w-full py-4 px-5 md:py-4 md:px-5 rounded-xl border-[1.5px] text-right transition-all duration-200 ${getCardClasses()}`}
+      className={`relative group w-full py-5 px-6 md:py-5 md:px-6 rounded-xl border-[1.5px] text-right transition-all duration-200 ${getCardClasses()}`}
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3, delay: delay * 0.06, ease: "easeOut" }}
@@ -85,7 +85,7 @@ export function AnswerCard({
       <span className="relative z-10 flex items-center gap-3">
         {/* Letter badge */}
         <span
-          className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0 transition-colors duration-200 ${
+          className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0 transition-colors duration-200 ${
             showResult && isCorrect
               ? "bg-saudi-emerald/25 text-saudi-emerald"
               : showResult && isWrong
@@ -97,7 +97,7 @@ export function AnswerCard({
         >
           {LETTERS[delay] || delay + 1}
         </span>
-        <span className="flex-1 text-sm md:text-base font-medium leading-relaxed">{text}</span>
+        <span className="flex-1 text-lg md:text-xl font-medium leading-relaxed">{text}</span>
         {getIcon()}
       </span>
 

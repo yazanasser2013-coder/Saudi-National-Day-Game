@@ -51,7 +51,7 @@ export function LandingScreen() {
         <main className="relative z-10 flex-1 flex flex-col items-center justify-center p-6 md:p-10 min-h-screen">
           <div
             className="absolute inset-0 bg-center bg-no-repeat bg-cover pointer-events-none"
-            style={{ backgroundImage: `url(${HeroImg})`, opacity: 0.20 }}
+            style={{ backgroundImage: `url(${HeroImg})`, opacity: 0.28 }}
           />
           <motion.div
             className="relative z-10 w-full max-w-5xl text-center"
@@ -80,11 +80,11 @@ export function LandingScreen() {
             <motion.button
               onClick={handleStart}
               onMouseEnter={playHover}
-              className="group relative inline-flex items-center gap-4 px-12 py-5 md:px-16 md:py-6 bg-emerald-600 text-white font-bold text-lg md:text-xl rounded-full overflow-hidden shadow-[0_0_40px_rgba(11,140,56,0.5)] hover:shadow-[0_0_60px_rgba(11,140,56,0.7)] transition-all duration-500"
+              className="group relative inline-flex items-center gap-4 px-12 py-5 md:px-16 md:py-6 bg-emerald-600 text-white font-bold text-lg md:text-xl rounded-full overflow-hidden shadow-[0_0_40px_rgba(11,140,56,0.5)] transition-all duration-500"
               initial={{ opacity: 0, y: 30, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ scale: 1.04, y: -3, boxShadow: "0 0 80px rgba(11,140,56,0.6)" }}
+              whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.98 }}
             >
               <span className="relative z-10 flex items-center gap-3">
@@ -95,7 +95,9 @@ export function LandingScreen() {
                   </motion.span>
                 </motion.div>
               </span>
-              <motion.div className="absolute inset-0 bg-linear-to-r from-amber-400 via-amber-300 to-amber-500 opacity-0 group-hover:opacity-100" transition={{ duration: 0.5 }} />
+              <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100" transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: 10 }}
+                whileTap={{ scale: 0.98 }} />
               <motion.div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%]" transition={{ duration: 0.8 }} />
             </motion.button>
 

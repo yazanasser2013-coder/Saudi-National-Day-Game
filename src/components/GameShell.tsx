@@ -282,7 +282,7 @@ export function GameShell() {
         ))}
       </div>
       <header className="relative z-10 p-4 md:p-6">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <ScoreDisplay
             score={state.score}
             correctAnswers={state.correctAnswers}
@@ -295,8 +295,8 @@ export function GameShell() {
           />
         </div>
       </header>
-      <main className="relative z-10 p-4 md:p-6 pb-20">
-        <div className="max-w-4xl mx-auto">
+      <main className="relative z-10 p-4 md:p-8 pb-20">
+        <div className="max-w-6xl mx-auto">
           <AnimatePresence mode="wait">
             {currentQuestion && !questionTransition && (
               <motion.div key={currentQuestion.id} initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }} transition={{ duration: 0.3, ease: "easeOut" }}>

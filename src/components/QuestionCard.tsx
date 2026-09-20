@@ -25,14 +25,14 @@ export function QuestionCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
-      <div className="mb-6 md:mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="px-3 py-1 bg-saudi-green/30 border border-saudi-emerald/30 rounded-full text-sm font-bold text-saudi-emerald">
+      <div className="mb-8 md:mb-10">
+        <div className="flex items-center gap-3 mb-5">
+          <span className="px-4 py-1.5 bg-saudi-green/30 border border-saudi-emerald/30 rounded-full text-sm font-bold text-saudi-emerald">
             {question.id}
           </span>
         </div>
         <motion.h2
-          className="text-xl md:text-2xl lg:text-3xl font-bold leading-relaxed text-saudi-white"
+          className="text-2xl md:text-3xl lg:text-4xl font-bold leading-relaxed text-saudi-white"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
@@ -41,7 +41,7 @@ export function QuestionCard({
         </motion.h2>
       </div>
       <motion.div
-        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        className="grid grid-cols-1 md:grid-cols-2 gap-5"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
