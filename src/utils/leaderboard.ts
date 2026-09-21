@@ -1,5 +1,6 @@
 const LEADERBOARD_KEY = "saudi-natday-leaderboard";
 const MAX_ENTRIES = 50;
+export const OWNER_NAME = "يزن ناصر";
 
 export interface LeaderboardEntry {
   id: string;
@@ -74,6 +75,21 @@ export function getPlayerRank(
   return board.length + 1;
 }
 
+export function isNameTaken(name: string): boolean {
+  const board = getLeaderboard();
+  return board.some((e) => e.name === name);
+}
+
+export function deleteFromLeaderboard(id: string): void {
+  const board = getLeaderboard();
+  const filtered = board.filter((e) => e.id !== id);
+  localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(filtered));
+}
+
 export function clearLeaderboard(): void {
   localStorage.removeItem(LEADERBOARD_KEY);
+}
+
+export function isOwner(name: string): boolean {
+  return name === OWNER_NAME;
 }

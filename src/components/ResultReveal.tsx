@@ -15,6 +15,8 @@ import {
   Award,
   Shield,
   Sparkles,
+  Trash2,
+  Eraser,
 } from "lucide-react";
 import { useGame } from "../context/game-context";
 import { useAudio } from "../hooks/useAudio";
@@ -23,6 +25,7 @@ import {
   getPerformanceTitle,
   MAX_POSSIBLE_SCORE,
 } from "../utils/scoring";
+import { deleteFromLeaderboard, clearLeaderboard, OWNER_NAME } from "../utils/leaderboard";
 import type { LeaderboardEntry } from "../utils/leaderboard";
 
 interface ResultRevealProps {
@@ -191,10 +194,24 @@ export function ResultReveal({
 }: ResultRevealProps) {
   const { state } = useGame();
   const { playClick, playHover } = useAudio();
+  const isOwner = state.player?.isOwner ?? false;
 
   const [stage, setStage] = useState(0);
   const [animatedScore, setAnimatedScore] = useState(0);
   const [showShare, setShowShare] = useState(false);
+  const [leaderboardState, setLeaderboardState] = useState(leaderboard);
+
+  const handleDeleteEntry = (id: string) => {
+    playClick();
+    deleteFromLeaderboard(id);
+    setLeaderboardState((prev) => prev.filter((e) => e.id !== id));
+  };
+
+  const handleClearAll = () => {
+    playClick();
+    clearLeaderboard();
+    setLeaderboardState([]);
+  };
 
   const { title: performanceTitle, emoji: performanceEmoji } =
     getPerformanceTitle(state.score, MAX_POSSIBLE_SCORE);
@@ -603,7 +620,7 @@ export function ResultReveal({
           )}
 
           {/* Stage 6: Leaderboard */}
-          {stage >= 6 && leaderboard.length > 0 && (
+          {stage >= 6 && leaderboardState.length > 0 && (
             <motion.div
               key="leaderboard"
               className="mb-8 max-h-72 overflow-y-auto scrollbar-hide rounded-2xl"
@@ -612,14 +629,28 @@ export function ResultReveal({
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
             >
-              <h3 className="font-bold text-lg mb-4 text-saudi-emerald flex items-center justify-center gap-2">
-                <Trophy className="w-5 h-5" />
-                لوحة المتصدرين
-              </h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-lg text-saudi-emerald flex items-center gap-2">
+                  <Trophy className="w-5 h-5" />
+                  لوحة المتصدرين
+                </h3>
+                {isOwner && (
+                  <motion.button
+                    onClick={handleClearAll}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-saudi-red/20 border border-saudi-red/40 rounded-lg text-saudi-red text-xs font-bold hover:bg-saudi-red/30 transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Eraser className="w-3.5 h-3.5" />
+                    مسح الكل
+                  </motion.button>
+                )}
+              </div>
 
               <div className="space-y-2">
-                {leaderboard.slice(0, 15).map((entry, i) => {
+                {leaderboardState.slice(0, 15).map((entry, i) => {
                   const isCurrentPlayer = entry.id === "current";
+                  const entryIsOwner = entry.name === OWNER_NAME;
                   return (
                     <motion.div
                       key={entry.id}
@@ -647,8 +678,9 @@ export function ResultReveal({
                       </span>
 
                       <div className="flex-1 text-right min-w-0">
-                        <span className="font-medium truncate block">
+                        <span className={`font-medium truncate block ${entryIsOwner ? "text-amber-400" : ""}`}>
                           {isCurrentPlayer ? entry.name + " (أنت)" : entry.name}
+                          {entryIsOwner && <Crown className="w-4 h-4 inline-block mr-1 text-amber-400" />}
                         </span>
                         <span className="text-xs text-saudi-white/40">
                           {entry.correctAnswers}/20 · {entry.averageTime.toFixed(1)}s
@@ -658,6 +690,17 @@ export function ResultReveal({
                       <span className="font-bold tabular-nums text-saudi-emerald text-lg">
                         {formatScore(entry.score)}
                       </span>
+
+                      {isOwner && !isCurrentPlayer && (
+                        <motion.button
+                          onClick={() => handleDeleteEntry(entry.id)}
+                          className="p-1.5 rounded-lg hover:bg-saudi-red/20 text-saudi-red/60 hover:text-saudi-red transition-colors"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </motion.button>
+                      )}
                     </motion.div>
                   );
                 })}

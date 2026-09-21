@@ -30,6 +30,7 @@ export interface TypingQuestion {
 
 export interface Player {
   name: string;
+  isOwner: boolean;
   mode: "single" | "team";
   teamNames: string[];
   score: number;
@@ -108,6 +109,7 @@ export type GameAction =
   | { type: "ENTER_FINAL_STAGE" }
   | { type: "SHOW_QUESTION_20" }
   | { type: "END_GAME" }
+  | { type: "SKIP_QUESTION" }
   | { type: "RESET_GAME" }
   | { type: "TOGGLE_SOUND" }
   | { type: "SET_LEADERBOARD"; payload: LeaderboardEntry[] };

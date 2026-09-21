@@ -7,7 +7,7 @@ import type { GameState, GameAction } from "../types/game";
 import { getGameQuestions } from "../data/questions";
 import { calculateScore, sanitizeName } from "../utils/scoring";
 import { GameContext } from "./game-context";
-import { saveToLeaderboard } from "../utils/leaderboard";
+import { saveToLeaderboard, isOwner as checkIsOwner } from "../utils/leaderboard";
 
 const initialState: GameState = {
   player: null,
@@ -45,6 +45,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         player: {
           name,
+          isOwner: checkIsOwner(name),
           mode,
           teamNames,
           score: 0,
@@ -227,6 +228,27 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       return { ...state, phase: 3, gameStatus: "final-stage" };
     case "SHOW_QUESTION_20":
       return { ...state, gameStatus: "question-20" };
+    case "SKIP_QUESTION": {
+      const currentQuestion = state.questions[state.currentQuestionIndex];
+      if (!currentQuestion) return state;
+      const points = currentQuestion.basePoints;
+      const updatedPlayer = state.player
+        ? {
+            ...state.player,
+            score: state.player.score + points,
+            correctAnswers: state.player.correctAnswers + 1,
+            answeredQuestions: [...state.player.answeredQuestions, currentQuestion.id],
+          }
+        : null;
+      return {
+        ...state,
+        player: updatedPlayer,
+        score: state.score + points,
+        correctAnswers: state.correctAnswers + 1,
+        answeredQuestions: [...state.answeredQuestions, currentQuestion],
+        timeRemaining: 0,
+      };
+    }
     case "END_GAME": {
       if (state.player) {
         saveToLeaderboard({

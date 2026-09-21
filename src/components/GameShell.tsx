@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut } from "lucide-react";
+import { LogOut, SkipForward } from "lucide-react";
 import { useGame } from "../context/game-context";
 import { useTimer } from "../hooks/useTimer";
 import { useAudio } from "../hooks/useAudio";
@@ -129,6 +129,32 @@ export function GameShell() {
     setShowTransition(true);
     setTimeout(() => setShowTransition(false), 800);
   }, []);
+
+  const handleSkip = useCallback(() => {
+    if (!state.player?.isOwner || showResult || !currentQuestion) return;
+    playCorrect();
+    dispatch({ type: "SKIP_QUESTION" });
+    setScorePopup({ points: currentQuestion.basePoints, isCorrect: true, responseTime: 0, isSpeedBonus: false });
+    setTimeout(() => setScorePopup(null), 1200);
+    advanceTimerRef.current = setTimeout(() => {
+      advanceTimerRef.current = null;
+      isProcessingRef.current = false;
+      setShowResult(false);
+      setSelectedIndex(null);
+      setShowPersonality(false);
+      setPersonalityMessage(null);
+      setQuestionTransition(true);
+      setTimeout(() => setQuestionTransition(false), 400);
+      if (state.currentQuestionIndex === 9 && state.phase === 2) {
+        triggerTransition("red");
+        dispatch({ type: "PHASE_TRANSITION" });
+      } else if (isQuestion20 && !question20Cinematic) {
+        setQuestion20Cinematic(true);
+      } else {
+        dispatch({ type: "NEXT_QUESTION" });
+      }
+    }, 800);
+  }, [state.player?.isOwner, state.currentQuestionIndex, state.phase, showResult, currentQuestion, dispatch, playCorrect, triggerTransition, isQuestion20, question20Cinematic]);
 
   const handleAnswer = useCallback(
     (index: number) => {
@@ -291,6 +317,22 @@ export function GameShell() {
         <LogOut className="w-4 h-4" />
         خروج
       </motion.button>
+
+      {state.player?.isOwner && (
+        <motion.button
+          onClick={handleSkip}
+          disabled={showResult}
+          className="fixed top-4 left-28 z-50 flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 font-bold text-sm hover:bg-amber-500/30 transition-all duration-200 disabled:opacity-50"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.7 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <SkipForward className="w-4 h-4" />
+          تخطي
+        </motion.button>
+      )}
 
       <div className="absolute inset-0 pointer-events-none opacity-10">
         {particles.map(({ id, duration, ...style }) => (

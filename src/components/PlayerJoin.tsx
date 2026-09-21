@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { User, Users, ArrowRight, Plus, X, ArrowLeft } from "lucide-react";
 import { useGame } from "../context/game-context";
 import { useAudio } from "../hooks/useAudio";
+import { isNameTaken } from "../utils/leaderboard";
 
 export function PlayerJoin() {
   const { dispatch } = useGame();
@@ -52,11 +53,14 @@ export function PlayerJoin() {
       const trimmed = name.trim();
       if (!trimmed) { setError("اكتب اسمك أولاً"); return; }
       if (trimmed.length < 2) { setError("الاسم قصير جداً"); return; }
+      if (isNameTaken(trimmed)) { setError("هذا الاسم موجود مسبقاً"); return; }
       playClick();
       dispatch({ type: "SET_PLAYER", payload: { name: trimmed, mode: "single", teamNames: [] } });
     } else {
       const filled = teamNames.map(n => n.trim()).filter(n => n.length >= 2);
       if (filled.length < 2) { setError("اكتب اسماء اعضاء الفريق (2 على الاقل)"); return; }
+      const duplicate = filled.find(n => isNameTaken(n));
+      if (duplicate) { setError(`الاسم "${duplicate}" موجود مسبقاً`); return; }
       playClick();
       dispatch({ type: "SET_PLAYER", payload: { name: filled[0], mode: "team", teamNames: filled } });
     }
