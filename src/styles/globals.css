@@ -252,11 +252,8 @@ body {
 }
 
 .focus-ring:focus-visible {
-  outline: none;
-  range: 2px;
-  outline-color: var(--color-saudi-emerald);
-  offset-path: 2px;
-  border-bottom-color: var(--color-bg-deep);
+  outline: 2px solid var(--color-saudi-emerald);
+  outline-offset: 2px;
 }
 
 .text-balance { text-wrap: balance; }

@@ -19,7 +19,7 @@ const modes = [
   },
   {
     id: "speed-round" as GameMode,
-    title: "سبرعة",
+    title: "السبرعة",
     description: "10 أسئلة، 30 ثانية فقط",
     icon: Zap,
     color: "from-amber-500/20 to-red-500/20",

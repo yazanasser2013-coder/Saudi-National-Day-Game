@@ -26,6 +26,7 @@ import {
   MAX_POSSIBLE_SCORE,
 } from "../utils/scoring";
 import { deleteFromLeaderboard, clearLeaderboard, OWNER_NAME } from "../utils/leaderboard";
+import { Confetti } from "./Confetti";
 import type { LeaderboardEntry } from "../utils/leaderboard";
 
 interface ResultRevealProps {
@@ -360,6 +361,8 @@ export function ResultReveal({
         </div>
       )}
 
+      <Confetti active={isTop3 && stage >= 5} count={isTop3 ? 80 : 0} />
+
       <motion.div
         className="relative z-10 w-full max-w-2xl text-center"
         initial={{ opacity: 0 }}
@@ -426,27 +429,57 @@ export function ResultReveal({
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="bg-saudi-green/20 border border-saudi-emerald/30 rounded-xl p-4 text-center">
+              <motion.div
+                className="bg-saudi-green/20 border border-saudi-emerald/30 rounded-xl p-4 text-center"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+              >
                 <Target className="w-5 h-5 text-saudi-emerald mx-auto mb-1" />
-                <p className="font-bold text-xl text-saudi-white tabular-nums">
+                <motion.p
+                  className="font-bold text-xl text-saudi-white tabular-nums"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.3, type: "spring" }}
+                >
                   {state.correctAnswers}/{state.questions.length}
-                </p>
+                </motion.p>
                 <p className="text-xs text-saudi-white/50">صحيحة</p>
-              </div>
-              <div className="bg-saudi-green/20 border border-saudi-emerald/30 rounded-xl p-4 text-center">
+              </motion.div>
+              <motion.div
+                className="bg-saudi-green/20 border border-saudi-emerald/30 rounded-xl p-4 text-center"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
                 <TrendingUp className="w-5 h-5 text-saudi-emerald mx-auto mb-1" />
-                <p className="font-bold text-xl text-saudi-white tabular-nums">
+                <motion.p
+                  className="font-bold text-xl text-saudi-white tabular-nums"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.4, type: "spring" }}
+                >
                   {accuracy}%
-                </p>
+                </motion.p>
                 <p className="text-xs text-saudi-white/50">الدقة</p>
-              </div>
-              <div className="bg-saudi-green/20 border border-saudi-emerald/30 rounded-xl p-4 text-center">
+              </motion.div>
+              <motion.div
+                className="bg-saudi-green/20 border border-saudi-emerald/30 rounded-xl p-4 text-center"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
                 <Clock className="w-5 h-5 text-saudi-emerald mx-auto mb-1" />
-                <p className="font-bold text-xl text-saudi-white tabular-nums">
+                <motion.p
+                  className="font-bold text-xl text-saudi-white tabular-nums"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.5, type: "spring" }}
+                >
                   {state.averageAnswerTime.toFixed(1)}s
-                </p>
+                </motion.p>
                 <p className="text-xs text-saudi-white/50">متوسط الوقت</p>
-              </div>
+              </motion.div>
             </motion.div>
           )}
 
@@ -507,12 +540,17 @@ export function ResultReveal({
                       className={`flex items-center gap-2 px-4 py-2.5 rounded-xl ${achievement.bgColor} border ${achievement.borderColor}`}
                       initial={{ opacity: 0, scale: 0.8, y: 10 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
-                      transition={{ delay: i * 0.1, type: "spring", stiffness: 200 }}
+                      transition={{ delay: i * 0.15, type: "spring", stiffness: 200 }}
                     >
                       <Icon className={`w-5 h-5 ${achievement.color}`} />
                       <div className="text-right">
                         <p className={`text-sm font-bold ${achievement.color}`}>{achievement.title}</p>
-                        <p className="text-[10px] text-saudi-white/40">{achievement.subtitle}</p>
+                        <motion.p
+                          className="text-[10px] text-saudi-white/40"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: i * 0.15 + 0.2 }}
+                        >{achievement.subtitle}</motion.p>
                       </div>
                     </motion.div>
                   );
@@ -607,15 +645,25 @@ export function ResultReveal({
                 ) : (
                   <Crown className="w-6 h-6 text-saudi-emerald" />
                 )}
-                <span className="text-xl font-bold text-saudi-white">
+                <motion.span
+                  className="text-xl font-bold text-saudi-white"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
                   {performanceEmoji} {performanceTitle}
-                </span>
+                </motion.span>
               </div>
-              <p className="text-saudi-white/60 mt-3 text-center">
+              <motion.p
+                className="text-saudi-white/60 mt-3 text-center"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
                 {rank <= 10
                   ? "أداء قوي! أنت في العشرة الأوائل. 💪"
                   : "التحدي انتهى... لكن الجولة القادمة لك. 🇸🇦"}
-              </p>
+              </motion.p>
             </motion.div>
           )}
 
@@ -687,9 +735,14 @@ export function ResultReveal({
                         </span>
                       </div>
 
-                      <span className="font-bold tabular-nums text-saudi-emerald text-lg">
+                      <motion.span
+                        className="font-bold tabular-nums text-saudi-emerald text-lg"
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.05 * Math.min(i, 10) + 0.3, type: "spring" }}
+                      >
                         {formatScore(entry.score)}
-                      </span>
+                      </motion.span>
 
                       {isOwner && !isCurrentPlayer && (
                         <motion.button
@@ -728,7 +781,7 @@ export function ResultReveal({
                   <RotateCcw className="w-5 h-5" />
                   العب مرة أخرى
                 </span>
-                <motion.div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-r from-saudi-emerald/80 via-saudi-emerald to-saudi-emerald/80 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </motion.button>
 
               <motion.button
@@ -739,7 +792,17 @@ export function ResultReveal({
                 whileTap={{ scale: 0.98 }}
               >
                 <Share2 className="w-5 h-5" />
-                {showShare ? "تم النسخ!" : "شارك نتيجتك"}
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={showShare ? "copied" : "share"}
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -5 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {showShare ? "تم النسخ!" : "شارك نتيجتك"}
+                  </motion.span>
+                </AnimatePresence>
               </motion.button>
             </motion.div>
           )}

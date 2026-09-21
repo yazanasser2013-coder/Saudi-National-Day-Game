@@ -4,7 +4,7 @@ import { Zap, Trophy, Clock, ArrowLeft } from "lucide-react";
 import { useGame } from "../context/game-context";
 import { useAudio } from "../hooks/useAudio";
 import { getShuffledPhase1, getShuffledPhase2 } from "../data/questions";
-import { calculateScore } from "../utils/scoring";
+import { calculateScore, formatScore } from "../utils/scoring";
 import { AnswerCard } from "./AnswerCard";
 import { Confetti } from "./Confetti";
 import { ScorePopup } from "./ScorePopup";
@@ -131,21 +131,33 @@ export function SpeedRound() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <div className="text-5xl font-bold text-saudi-emerald mb-2">{score.toLocaleString("ar-SA")}</div>
-            <div className="text-saudi-white/60">نقاط</div>
+            <motion.div
+              className="text-5xl font-bold text-saudi-emerald mb-2"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.9, type: "spring", stiffness: 200 }}
+            >
+              {formatScore(score)}
+            </motion.div>
+            <motion.div
+              className="text-saudi-white/60"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.1 }}
+            >نقاط</motion.div>
             <div className="flex items-center justify-center gap-6 mt-4">
-              <div className="text-center">
+              <motion.div className="text-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2 }}>
                 <div className="text-2xl font-bold text-saudi-white">{correctCount}</div>
                 <div className="text-saudi-white/50 text-sm">صحيحة</div>
-              </div>
-              <div className="text-center">
+              </motion.div>
+              <motion.div className="text-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3 }}>
                 <div className="text-2xl font-bold text-saudi-white">{QUESTION_COUNT - correctCount}</div>
                 <div className="text-saudi-white/50 text-sm">خاطئة</div>
-              </div>
-              <div className="text-center">
+              </motion.div>
+              <motion.div className="text-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4 }}>
                 <div className="text-2xl font-bold text-amber-400">{Math.round((correctCount / QUESTION_COUNT) * 100)}%</div>
                 <div className="text-saudi-white/50 text-sm">الدقة</div>
-              </div>
+              </motion.div>
             </div>
           </motion.div>
 
@@ -153,6 +165,9 @@ export function SpeedRound() {
             <motion.button
               onClick={() => { playClick(); dispatch({ type: "RESET_GAME" }); }}
               className="w-full py-4 bg-saudi-emerald text-saudi-black font-bold text-lg rounded-xl hover:bg-saudi-emerald/90 transition-colors"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.5 }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -161,6 +176,9 @@ export function SpeedRound() {
             <motion.button
               onClick={() => { playClick(); dispatch({ type: "GO_TO_MODE_SELECT" }); }}
               className="w-full py-3 border border-saudi-emerald/30 text-saudi-emerald font-bold rounded-xl hover:bg-saudi-emerald/10 transition-colors"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.6 }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -217,7 +235,7 @@ export function SpeedRound() {
           <div className="flex items-center gap-2 px-4 py-2 bg-saudi-red/20 border border-saudi-red/40 rounded-xl">
             <Clock className="w-5 h-5 text-saudi-red" />
             <span className={`font-bold text-lg font-mono ${timeLeft < 10 ? "text-saudi-red animate-pulse" : "text-saudi-white"}`}>
-              {timeLeft.toFixed(1)}
+              {Math.ceil(timeLeft)}
             </span>
           </div>
         </div>
@@ -230,7 +248,7 @@ export function SpeedRound() {
               className="h-2 rounded-full transition-all duration-300"
               animate={{
                 width: i === currentIndex ? 24 : 8,
-                backgroundColor: i < currentIndex ? "#0B8C38" : i === currentIndex ? "#D9A511" : "rgba(255,255,255,0.15)",
+                backgroundColor: i < currentIndex ? "#0B8C38" : i === currentIndex ? "#c9a227" : "rgba(255,255,255,0.15)",
               }}
             />
           ))}
@@ -248,12 +266,22 @@ export function SpeedRound() {
                 transition={{ duration: 0.3 }}
               >
                 <div className="mb-8">
-                  <span className="px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full text-sm font-bold text-amber-400">
+                  <motion.span
+                    className="px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full text-sm font-bold text-amber-400"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.1 }}
+                  >
                     سؤال {currentIndex + 1} / {QUESTION_COUNT}
-                  </span>
-                  <h2 className="text-2xl md:text-3xl font-bold text-saudi-white mt-4 leading-relaxed">
+                  </motion.span>
+                  <motion.h2
+                    className="text-2xl md:text-3xl font-bold text-saudi-white mt-4 leading-relaxed"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
                     {currentQuestion.question}
-                  </h2>
+                  </motion.h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

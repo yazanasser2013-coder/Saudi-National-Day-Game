@@ -4,6 +4,7 @@ import { Keyboard, Trophy, Clock, Check, X, ArrowLeft } from "lucide-react";
 import { useGame } from "../context/game-context";
 import { useAudio } from "../hooks/useAudio";
 import { getShuffledTyping } from "../data/mini-game-questions";
+import { formatScore } from "../utils/scoring";
 import { Confetti } from "./Confetti";
 import { ScorePopup } from "./ScorePopup";
 import { SoundControl } from "./SoundControl";
@@ -140,7 +141,7 @@ export function TypingChallenge() {
   if (isFinished) {
     return (
       <div className="app min-h-screen flex items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 to-saudi-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-saudi-gold/10 to-saudi-black" />
         <Confetti active={correctCount >= 7} count={40} />
         <motion.div
           className="relative z-10 text-center max-w-lg px-6"
@@ -149,7 +150,7 @@ export function TypingChallenge() {
           transition={{ duration: 0.6 }}
         >
           <motion.div
-            className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center mx-auto mb-8"
+            className="w-24 h-24 rounded-full bg-gradient-to-br from-saudi-gold to-amber-600 flex items-center justify-center mx-auto mb-8"
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
@@ -172,21 +173,33 @@ export function TypingChallenge() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <div className="text-5xl font-bold text-saudi-emerald mb-2">{score.toLocaleString("ar-SA")}</div>
-            <div className="text-saudi-white/60">نقاط</div>
+            <motion.div
+              className="text-5xl font-bold text-saudi-emerald mb-2"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.9, type: "spring", stiffness: 200 }}
+            >
+              {formatScore(score)}
+            </motion.div>
+            <motion.div
+              className="text-saudi-white/60"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.1 }}
+            >نقاط</motion.div>
             <div className="flex items-center justify-center gap-6 mt-4">
-              <div className="text-center">
+              <motion.div className="text-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2 }}>
                 <div className="text-2xl font-bold text-saudi-white">{correctCount}</div>
                 <div className="text-saudi-white/50 text-sm">صحيحة</div>
-              </div>
-              <div className="text-center">
+              </motion.div>
+              <motion.div className="text-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3 }}>
                 <div className="text-2xl font-bold text-saudi-white">{QUESTION_COUNT - correctCount}</div>
                 <div className="text-saudi-white/50 text-sm">خاطئة</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-purple-400">{Math.round((correctCount / QUESTION_COUNT) * 100)}%</div>
+              </motion.div>
+              <motion.div className="text-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4 }}>
+                <div className="text-2xl font-bold text-amber-400">{Math.round((correctCount / QUESTION_COUNT) * 100)}%</div>
                 <div className="text-saudi-white/50 text-sm">الدقة</div>
-              </div>
+              </motion.div>
             </div>
           </motion.div>
 
@@ -194,6 +207,9 @@ export function TypingChallenge() {
             <motion.button
               onClick={() => { playClick(); dispatch({ type: "RESET_GAME" }); }}
               className="w-full py-4 bg-saudi-emerald text-saudi-black font-bold text-lg rounded-xl hover:bg-saudi-emerald/90 transition-colors"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.5 }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -202,6 +218,9 @@ export function TypingChallenge() {
             <motion.button
               onClick={() => { playClick(); dispatch({ type: "GO_TO_MODE_SELECT" }); }}
               className="w-full py-3 border border-saudi-emerald/30 text-saudi-emerald font-bold rounded-xl hover:bg-saudi-emerald/10 transition-colors"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.6 }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -216,7 +235,7 @@ export function TypingChallenge() {
 
   return (
     <div className="app min-h-screen flex items-center justify-center relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 to-saudi-black" />
+      <div className="absolute inset-0 bg-gradient-to-b from-saudi-gold/10 to-saudi-black" />
       <Confetti active={showConfetti} count={30} />
 
       {/* Back Button */}
@@ -236,7 +255,7 @@ export function TypingChallenge() {
       {/* Timer */}
       <div className="fixed top-0 left-0 right-0 z-50 h-1.5 bg-saudi-black/50">
         <motion.div
-          className="h-full bg-gradient-to-r from-purple-500 to-blue-500"
+          className="h-full bg-gradient-to-r from-saudi-gold to-amber-500"
           animate={{ width: `${(timeLeft / TIME_PER_QUESTION) * 100}%` }}
           transition={{ duration: 0.1 }}
         />
@@ -246,9 +265,9 @@ export function TypingChallenge() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-4 py-2 bg-purple-500/20 border border-purple-500/40 rounded-xl">
-              <Trophy className="w-5 h-5 text-purple-400" />
-              <span className="text-purple-400 font-bold text-lg">{score.toLocaleString("ar-SA")}</span>
+            <div className="flex items-center gap-2 px-4 py-2 bg-saudi-gold/20 border border-saudi-gold/40 rounded-xl">
+              <Trophy className="w-5 h-5 text-amber-400" />
+              <span className="text-amber-400 font-bold text-lg">{score.toLocaleString("ar-SA")}</span>
             </div>
             <div className="flex items-center gap-2 px-3 py-2 bg-saudi-green/20 border border-saudi-emerald/30 rounded-xl">
               <span className="text-saudi-emerald font-bold text-sm">{correctCount}/{currentIndex}</span>
@@ -271,7 +290,7 @@ export function TypingChallenge() {
               className="h-1.5 rounded-full transition-all duration-300"
               animate={{
                 width: i === currentIndex ? 20 : 6,
-                backgroundColor: i < currentIndex ? "#0B8C38" : i === currentIndex ? "#A855F7" : "rgba(255,255,255,0.15)",
+                backgroundColor: i < currentIndex ? "#0B8C38" : i === currentIndex ? "#c9a227" : "rgba(255,255,255,0.15)",
               }}
             />
           ))}
@@ -288,16 +307,26 @@ export function TypingChallenge() {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <span className="inline-block px-4 py-1.5 bg-purple-500/20 border border-purple-500/30 rounded-full text-sm font-bold text-purple-400 mb-6">
+              <span className="inline-block px-4 py-1.5 bg-saudi-gold/20 border border-saudi-gold/30 rounded-full text-sm font-bold text-amber-400 mb-6">
                 سؤال {currentIndex + 1} من {QUESTION_COUNT}
               </span>
 
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-saudi-white leading-relaxed mb-10 px-4">
+              <motion.h2
+                className="text-2xl md:text-3xl lg:text-4xl font-bold text-saudi-white leading-relaxed mb-10 px-4"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+              >
                 {currentQuestion.question}
-              </h2>
+              </motion.h2>
 
               <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-                <div className="relative mb-6">
+                <motion.div
+                  className="relative mb-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
                   <input
                     ref={inputRef}
                     type="text"
@@ -310,7 +339,7 @@ export function TypingChallenge() {
                         ? wasCorrect
                           ? "border-saudi-emerald shadow-[0_0_30px_rgba(11,140,56,0.3)]"
                           : "border-saudi-red shadow-[0_0_30px_rgba(217,74,17,0.3)]"
-                        : "border-purple-500/40 focus:border-purple-400 focus:shadow-[0_0_20px_rgba(168,85,247,0.2)]"
+                        : "border-saudi-gold/40 focus:border-amber-400 focus:shadow-[0_0_20px_rgba(201,162,39,0.2)]"
                     }`}
                     autoComplete="off"
                     autoFocus
@@ -333,7 +362,7 @@ export function TypingChallenge() {
                       )}
                     </motion.div>
                   )}
-                </div>
+                </motion.div>
 
                 {showResult && !wasCorrect && (
                   <motion.p
@@ -350,7 +379,7 @@ export function TypingChallenge() {
                   <motion.button
                     type="submit"
                     disabled={!inputValue.trim()}
-                    className="w-full py-4 bg-purple-500 text-white font-bold text-lg rounded-xl hover:bg-purple-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="w-full py-4 bg-saudi-gold text-saudi-black font-bold text-lg rounded-xl hover:bg-amber-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >

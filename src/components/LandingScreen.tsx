@@ -60,7 +60,7 @@ export function LandingScreen() {
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           >
             <motion.h1
-              className="font-display font-bold text-3xl md:text-5xl lg:text-6xl mb-6 text-white whitespace-nowrap"
+              className="font-display font-bold text-3xl md:text-5xl lg:text-6xl mb-6 text-white"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
@@ -136,11 +136,23 @@ export function LandingScreen() {
                   whileHover={{ y: -10, scale: 1.02 }}
                 >
                   <div className="flex flex-col items-center text-center gap-4">
-                    <div className="w-18 h-18 rounded-2xl bg-linear-to-br from-emerald-500/20 to-amber-500/20 flex items-center justify-center relative">
+                    <div className="w-20 h-20 rounded-2xl bg-linear-to-br from-emerald-500/20 to-amber-500/20 flex items-center justify-center relative">
                       <feature.icon className="w-9 h-9 text-emerald-400" />
                     </div>
-                    <h3 className="text-xl font-display font-bold text-white">{feature.title}</h3>
-                    <p className="text-white/70 leading-relaxed">{feature.description}</p>
+                    <motion.h3
+                      className="text-xl font-display font-bold text-white"
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: 0.1 }}
+                      viewport={{ once: true }}
+                    >{feature.title}</motion.h3>
+                    <motion.p
+                      className="text-white/70 leading-relaxed"
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: 0.2 }}
+                      viewport={{ once: true }}
+                    >{feature.description}</motion.p>
                   </div>
                 </motion.div>
               ))}
@@ -181,15 +193,27 @@ export function LandingScreen() {
                       <span className="text-2xl font-bold text-white">{step.step}</span>
                     </div>
                   </motion.div>
-                  <h3 className="text-xl font-display font-bold text-white mb-3">{step.title}</h3>
-                  <p className="text-white/70">{step.description}</p>
+                  <motion.h3
+                    className="text-xl font-display font-bold text-white mb-3"
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.1 + 0.15 }}
+                    viewport={{ once: true }}
+                  >{step.title}</motion.h3>
+                  <motion.p
+                    className="text-white/70"
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.1 + 0.25 }}
+                    viewport={{ once: true }}
+                  >{step.description}</motion.p>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        <footer className="relative z-20 p-8 bg-[#000000] border-t border-emerald-900/20">
+        <footer className="relative z-20 p-8 bg-saudi-black border-t border-emerald-900/20">
           <div className="max-w-6xl mx-auto flex flex-col items-center gap-2">
             <p className="font-display font-bold text-lg text-white text-center">اليوم الوطني السعودي</p>
             <p className="text-sm text-white/50 text-center">الإصدار 1.0.0 · جميع الحقوق محفوظة</p>

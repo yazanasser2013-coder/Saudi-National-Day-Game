@@ -97,7 +97,12 @@ export function AnswerCard({
         >
           {LETTERS[delay] || delay + 1}
         </span>
-        <span className="flex-1 text-lg md:text-xl font-medium leading-relaxed">{text}</span>
+        <motion.span
+          className="flex-1 text-lg md:text-xl font-medium leading-relaxed"
+          initial={{ opacity: 0, x: 5 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: delay * 0.06 + 0.15, duration: 0.3 }}
+        >{text}</motion.span>
         {getIcon()}
       </span>
 

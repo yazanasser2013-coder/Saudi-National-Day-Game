@@ -34,7 +34,7 @@ export function StreakBar({ streak }: StreakBarProps) {
               <Flame className="w-5 h-5 text-saudi-red" />
             </motion.div>
             <span className="text-saudi-red font-bold text-lg">
-              {streak}x streak!
+              {streak}x سلسلة!
             </span>
             {streak >= 5 && (
               <motion.span

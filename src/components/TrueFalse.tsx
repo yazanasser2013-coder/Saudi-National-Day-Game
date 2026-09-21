@@ -4,6 +4,7 @@ import { Check, X, Trophy, Clock, ArrowLeft } from "lucide-react";
 import { useGame } from "../context/game-context";
 import { useAudio } from "../hooks/useAudio";
 import { getShuffledTrueFalse } from "../data/mini-game-questions";
+import { formatScore } from "../utils/scoring";
 import { Confetti } from "./Confetti";
 import { ScorePopup } from "./ScorePopup";
 import { SoundControl } from "./SoundControl";
@@ -143,21 +144,33 @@ export function TrueFalse() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <div className="text-5xl font-bold text-saudi-emerald mb-2">{score.toLocaleString("ar-SA")}</div>
-            <div className="text-saudi-white/60">نقاط</div>
+            <motion.div
+              className="text-5xl font-bold text-saudi-emerald mb-2"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.9, type: "spring", stiffness: 200 }}
+            >
+              {formatScore(score)}
+            </motion.div>
+            <motion.div
+              className="text-saudi-white/60"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.1 }}
+            >نقاط</motion.div>
             <div className="flex items-center justify-center gap-6 mt-4">
-              <div className="text-center">
+              <motion.div className="text-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2 }}>
                 <div className="text-2xl font-bold text-saudi-white">{correctCount}</div>
                 <div className="text-saudi-white/50 text-sm">صحيحة</div>
-              </div>
-              <div className="text-center">
+              </motion.div>
+              <motion.div className="text-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3 }}>
                 <div className="text-2xl font-bold text-saudi-white">{QUESTION_COUNT - correctCount}</div>
                 <div className="text-saudi-white/50 text-sm">خاطئة</div>
-              </div>
-              <div className="text-center">
+              </motion.div>
+              <motion.div className="text-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4 }}>
                 <div className="text-2xl font-bold text-amber-400">{Math.round((correctCount / QUESTION_COUNT) * 100)}%</div>
                 <div className="text-saudi-white/50 text-sm">الدقة</div>
-              </div>
+              </motion.div>
             </div>
           </motion.div>
 
@@ -165,6 +178,9 @@ export function TrueFalse() {
             <motion.button
               onClick={() => { playClick(); dispatch({ type: "RESET_GAME" }); }}
               className="w-full py-4 bg-saudi-emerald text-saudi-black font-bold text-lg rounded-xl hover:bg-saudi-emerald/90 transition-colors"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.5 }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -173,6 +189,9 @@ export function TrueFalse() {
             <motion.button
               onClick={() => { playClick(); dispatch({ type: "GO_TO_MODE_SELECT" }); }}
               className="w-full py-3 border border-saudi-emerald/30 text-saudi-emerald font-bold rounded-xl hover:bg-saudi-emerald/10 transition-colors"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.6 }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -265,18 +284,18 @@ export function TrueFalse() {
 
               <motion.h2
                 className="text-2xl md:text-3xl lg:text-4xl font-bold text-saudi-white leading-relaxed mb-10 px-4"
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
               >
                 {currentQuestion.statement}
               </motion.h2>
 
-              <div className="flex items-center justify-center gap-6">
+              <div className="flex items-center justify-center gap-4 sm:gap-6">
                 <motion.button
                   onClick={() => handleAnswer(true)}
                   disabled={showResult}
-                  className={`group relative flex flex-col items-center gap-3 px-10 py-8 rounded-2xl border-2 transition-all duration-300 ${
+                  className={`group relative flex flex-col items-center gap-3 px-8 py-6 sm:px-10 sm:py-8 rounded-2xl border-2 transition-all duration-300 ${
                     showResult && currentQuestion.isTrue
                       ? "bg-saudi-emerald/20 border-saudi-emerald shadow-[0_0_30px_rgba(11,140,56,0.3)]"
                       : showResult && selectedAnswer === true && !currentQuestion.isTrue
@@ -286,16 +305,16 @@ export function TrueFalse() {
                   whileHover={!showResult ? { scale: 1.05, y: -5 } : {}}
                   whileTap={!showResult ? { scale: 0.95 } : {}}
                 >
-                  <div className="w-16 h-16 rounded-full bg-saudi-emerald/20 flex items-center justify-center">
-                    <Check className="w-8 h-8 text-saudi-emerald" />
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-saudi-emerald/20 flex items-center justify-center">
+                    <Check className="w-7 h-7 sm:w-8 sm:h-8 text-saudi-emerald" />
                   </div>
-                  <span className="text-xl font-bold text-saudi-white">صح</span>
+                  <span className="text-lg sm:text-xl font-bold text-saudi-white">صح</span>
                 </motion.button>
 
                 <motion.button
                   onClick={() => handleAnswer(false)}
                   disabled={showResult}
-                  className={`group relative flex flex-col items-center gap-3 px-10 py-8 rounded-2xl border-2 transition-all duration-300 ${
+                  className={`group relative flex flex-col items-center gap-3 px-8 py-6 sm:px-10 sm:py-8 rounded-2xl border-2 transition-all duration-300 ${
                     showResult && !currentQuestion.isTrue
                       ? "bg-saudi-emerald/20 border-saudi-emerald shadow-[0_0_30px_rgba(11,140,56,0.3)]"
                       : showResult && selectedAnswer === false && currentQuestion.isTrue
@@ -305,10 +324,10 @@ export function TrueFalse() {
                   whileHover={!showResult ? { scale: 1.05, y: -5 } : {}}
                   whileTap={!showResult ? { scale: 0.95 } : {}}
                 >
-                  <div className="w-16 h-16 rounded-full bg-saudi-red/20 flex items-center justify-center">
-                    <X className="w-8 h-8 text-saudi-red" />
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-saudi-red/20 flex items-center justify-center">
+                    <X className="w-7 h-7 sm:w-8 sm:h-8 text-saudi-red" />
                   </div>
-                  <span className="text-xl font-bold text-saudi-white">خطأ</span>
+                  <span className="text-lg sm:text-xl font-bold text-saudi-white">خطأ</span>
                 </motion.button>
               </div>
             </motion.div>

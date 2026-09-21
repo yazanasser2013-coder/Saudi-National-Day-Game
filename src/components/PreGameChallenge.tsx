@@ -90,7 +90,7 @@ export function PreGameChallenge({ playerName, onComplete }: PreGameChallengePro
           </span>
         </motion.div>
 
-        <div className="h-64 flex items-center justify-center">
+        <div className="min-h-64 flex items-center justify-center">
           <AnimatePresence mode="wait">
             {!showReady && currentChallenge < challenges.length && (
               <motion.div
@@ -110,7 +110,16 @@ export function PreGameChallenge({ playerName, onComplete }: PreGameChallengePro
                   );
                 })()}
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-saudi-white leading-tight">
-                  {challenges[currentChallenge].text}
+                  {challenges[currentChallenge].text.split("").map((char, i) => (
+                    <motion.span
+                      key={i}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.03, duration: 0.3 }}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
                 </h2>
               </motion.div>
             )}
