@@ -65,7 +65,12 @@ export function ModeSelect() {
   };
 
   return (
-    <div className="app min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    <motion.div
+      className="app min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="absolute inset-0 bg-gradient-to-b from-saudi-green/15 to-saudi-black" />
       <div className="absolute inset-0 opacity-5">
         <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -143,6 +148,6 @@ export function ModeSelect() {
           ))}
         </div>
       </motion.div>
-    </div>
+    </motion.div>
   );
 }

@@ -226,7 +226,12 @@ export function SortChallenge() {
   }
 
   return (
-    <div className="app min-h-screen flex items-center justify-center relative overflow-hidden">
+    <motion.div
+      className="app min-h-screen flex items-center justify-center relative overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="absolute inset-0 bg-gradient-to-b from-saudi-emerald/10 to-saudi-black" />
       <Confetti active={showConfetti} count={30} />
 
@@ -255,7 +260,12 @@ export function SortChallenge() {
 
       <div className="relative z-10 w-full max-w-2xl px-4">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <motion.div
+          className="flex items-center justify-between mb-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-4 py-2 bg-saudi-emerald/20 border border-saudi-emerald/40 rounded-xl">
               <Trophy className="w-5 h-5 text-saudi-emerald" />
@@ -272,10 +282,15 @@ export function SortChallenge() {
               {Math.ceil(timeLeft)}
             </span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Progress dots */}
-        <div className="flex items-center justify-center gap-1.5 mb-10">
+        <motion.div
+          className="flex items-center justify-center gap-1.5 mb-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
           {questions.map((_, i) => (
             <motion.div
               key={i}
@@ -286,7 +301,7 @@ export function SortChallenge() {
               }}
             />
           ))}
-        </div>
+        </motion.div>
 
         {/* Question */}
         <AnimatePresence mode="wait">
@@ -310,9 +325,9 @@ export function SortChallenge() {
 
               <motion.h2
                 className="text-xl md:text-2xl font-bold text-saudi-emerald mb-8"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ delay: 0.3, type: "spring", stiffness: 200, damping: 15 }}
               >
                 {currentQuestion.instruction}
               </motion.h2>
@@ -364,9 +379,9 @@ export function SortChallenge() {
                       }`}
                       whileHover={!isSelected && !showResult ? { scale: 1.02, x: -2 } : {}}
                       whileTap={!isSelected && !showResult ? { scale: 0.98 } : {}}
-                      initial={{ opacity: 0, y: 15 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 + (shuffledItems[currentIndex].indexOf(itemIdx)) * 0.05 }}
+                      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ delay: 0.4 + (shuffledItems[currentIndex].indexOf(itemIdx)) * 0.08, type: "spring", stiffness: 200, damping: 20 }}
                     >
                       <GripVertical className="w-5 h-5 text-saudi-white/20 flex-shrink-0" />
                       <span className="flex-1 text-lg font-medium text-saudi-white">{currentQuestion.items[itemIdx]}</span>
@@ -437,6 +452,6 @@ export function SortChallenge() {
 
       <ScorePopup points={scorePopup?.points ?? 0} isCorrect={scorePopup?.isCorrect ?? false} responseTime={0} isSpeedBonus={false} />
       <SoundControl />
-    </div>
+    </motion.div>
   );
 }

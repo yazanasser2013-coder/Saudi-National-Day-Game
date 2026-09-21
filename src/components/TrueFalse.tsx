@@ -205,7 +205,12 @@ export function TrueFalse() {
   }
 
   return (
-    <div className="app min-h-screen flex items-center justify-center relative overflow-hidden">
+    <motion.div
+      className="app min-h-screen flex items-center justify-center relative overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="absolute inset-0 bg-gradient-to-b from-saudi-red/10 to-saudi-black" />
       <Confetti active={showConfetti} count={30} />
 
@@ -234,7 +239,12 @@ export function TrueFalse() {
 
       <div className="relative z-10 w-full max-w-2xl px-4">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <motion.div
+          className="flex items-center justify-between mb-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-4 py-2 bg-saudi-red/20 border border-saudi-red/40 rounded-xl">
               <Trophy className="w-5 h-5 text-saudi-red" />
@@ -251,10 +261,15 @@ export function TrueFalse() {
               {Math.ceil(timeLeft)}
             </span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Progress dots */}
-        <div className="flex items-center justify-center gap-1.5 mb-10">
+        <motion.div
+          className="flex items-center justify-center gap-1.5 mb-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
           {questions.map((_, i) => (
             <motion.div
               key={i}
@@ -265,7 +280,7 @@ export function TrueFalse() {
               }}
             />
           ))}
-        </div>
+        </motion.div>
 
         {/* Statement */}
         <AnimatePresence mode="wait">
@@ -284,9 +299,9 @@ export function TrueFalse() {
 
               <motion.h2
                 className="text-2xl md:text-3xl lg:text-4xl font-bold text-saudi-white leading-relaxed mb-10 px-4"
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ delay: 0.3, type: "spring", stiffness: 200, damping: 15 }}
               >
                 {currentQuestion.statement}
               </motion.h2>
@@ -304,6 +319,9 @@ export function TrueFalse() {
                   }`}
                   whileHover={!showResult ? { scale: 1.05, y: -5 } : {}}
                   whileTap={!showResult ? { scale: 0.95 } : {}}
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 20 }}
                 >
                   <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-saudi-emerald/20 flex items-center justify-center">
                     <Check className="w-7 h-7 sm:w-8 sm:h-8 text-saudi-emerald" />
@@ -323,6 +341,9 @@ export function TrueFalse() {
                   }`}
                   whileHover={!showResult ? { scale: 1.05, y: -5 } : {}}
                   whileTap={!showResult ? { scale: 0.95 } : {}}
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.6, type: "spring", stiffness: 200, damping: 20 }}
                 >
                   <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-saudi-red/20 flex items-center justify-center">
                     <X className="w-7 h-7 sm:w-8 sm:h-8 text-saudi-red" />
@@ -337,6 +358,6 @@ export function TrueFalse() {
 
       <ScorePopup points={scorePopup?.points ?? 0} isCorrect={scorePopup?.isCorrect ?? false} responseTime={0} isSpeedBonus={false} />
       <SoundControl />
-    </div>
+    </motion.div>
   );
 }
