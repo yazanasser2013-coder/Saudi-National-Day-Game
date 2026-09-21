@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Flame, Clock, Zap, Trophy } from "lucide-react";
+import { Flame, Clock, Zap, Trophy, ArrowLeft } from "lucide-react";
 import { useAudio } from "../hooks/useAudio";
+import { useGame } from "../context/game-context";
 
 const challenges = [
   { text: "اتحداك تفوز بالمركز الأول", icon: Trophy, color: "text-amber-400", delay: 0 },
@@ -16,6 +17,7 @@ interface PreGameChallengeProps {
 }
 
 export function PreGameChallenge({ playerName, onComplete }: PreGameChallengeProps) {
+  const { dispatch } = useGame();
   const { playClick } = useAudio();
   const [currentChallenge, setCurrentChallenge] = useState(0);
   const [showReady, setShowReady] = useState(false);
@@ -43,6 +45,20 @@ export function PreGameChallenge({ playerName, onComplete }: PreGameChallengePro
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
       />
+
+      {/* Back Button */}
+      <motion.button
+        onClick={() => { playClick(); dispatch({ type: "GO_TO_MODE_SELECT" }); }}
+        className="fixed top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-xl bg-saudi-red/20 border border-saudi-red/40 text-saudi-red font-bold text-sm hover:bg-saudi-red/30 transition-all duration-200"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.5 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <ArrowLeft className="w-4 h-4" />
+        خروج
+      </motion.button>
 
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         {[1, 2, 3].map((ring) => (

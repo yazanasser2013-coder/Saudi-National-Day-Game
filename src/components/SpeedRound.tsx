@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Zap, Trophy, Clock } from "lucide-react";
+import { Zap, Trophy, Clock, ArrowLeft } from "lucide-react";
 import { useGame } from "../context/game-context";
 import { useAudio } from "../hooks/useAudio";
 import { getShuffledPhase1, getShuffledPhase2 } from "../data/questions";
@@ -176,6 +176,20 @@ export function SpeedRound() {
   return (
     <div className="app min-h-screen relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-amber-500/10 to-saudi-black" />
+
+      {/* Back Button */}
+      <motion.button
+        onClick={() => { playClick(); dispatch({ type: "GO_TO_MODE_SELECT" }); }}
+        className="fixed top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-xl bg-saudi-red/20 border border-saudi-red/40 text-saudi-red font-bold text-sm hover:bg-saudi-red/30 transition-all duration-200"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.5 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <ArrowLeft className="w-4 h-4" />
+        خروج
+      </motion.button>
 
       {/* Global Timer Bar */}
       <div className="fixed top-0 left-0 right-0 z-50 h-1.5 bg-saudi-black/50">

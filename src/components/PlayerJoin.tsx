@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, Users, ArrowRight, Plus, X } from "lucide-react";
+import { User, Users, ArrowRight, Plus, X, ArrowLeft } from "lucide-react";
 import { useGame } from "../context/game-context";
 import { useAudio } from "../hooks/useAudio";
 
@@ -65,6 +65,21 @@ export function PlayerJoin() {
   return (
     <div className="app min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-saudi-green/20 to-saudi-black" />
+
+      {/* Back Button */}
+      <motion.button
+        onClick={() => { playClick(); dispatch({ type: "RESET_GAME" }); }}
+        className="fixed top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-xl bg-saudi-red/20 border border-saudi-red/40 text-saudi-red font-bold text-sm hover:bg-saudi-red/30 transition-all duration-200"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.5 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <ArrowLeft className="w-4 h-4" />
+        رجوع
+      </motion.button>
+
       <div className="absolute inset-0 opacity-5">
         <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
           <defs>
