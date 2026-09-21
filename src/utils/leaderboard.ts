@@ -93,3 +93,51 @@ export function clearLeaderboard(): void {
 export function isOwner(name: string): boolean {
   return name === OWNER_NAME;
 }
+
+const ALL_GAME_MODES = ["quiz", "sort-challenge", "true-false", "typing-challenge"];
+
+export interface LegendaryStatus {
+  isLegendary: boolean;
+  totalTime: number;
+  isFastest: boolean;
+}
+
+export function checkLegendaryBadge(name: string): LegendaryStatus {
+  const board = getLeaderboard();
+  const playerEntries = board.filter((e) => e.name === name);
+
+  const completedModes = new Set(playerEntries.map((e) => e.gameMode));
+  const hasAllModes = ALL_GAME_MODES.every((m) => completedModes.has(m));
+
+  if (!hasAllModes) {
+    return { isLegendary: false, totalTime: 0, isFastest: false };
+  }
+
+  const allPerfect = ALL_GAME_MODES.every((mode) => {
+    const entry = playerEntries.find((e) => e.gameMode === mode);
+    return entry && entry.percentage === 100;
+  });
+
+  if (!allPerfect) {
+    return { isLegendary: false, totalTime: 0, isFastest: false };
+  }
+
+  const totalTime = ALL_GAME_MODES.reduce((sum, mode) => {
+    const entry = playerEntries.find((e) => e.gameMode === mode);
+    return sum + (entry ? entry.averageTime * 20 : 999);
+  }, 0);
+
+  const allNames = new Set(board.map((e) => e.name));
+  let isFastest = true;
+
+  for (const otherName of allNames) {
+    if (otherName === name) continue;
+    const other = checkLegendaryBadge(otherName);
+    if (other.isLegendary && other.totalTime < totalTime) {
+      isFastest = false;
+      break;
+    }
+  }
+
+  return { isLegendary: true, totalTime, isFastest };
+}

@@ -25,7 +25,7 @@ import {
   getPerformanceTitle,
   MAX_POSSIBLE_SCORE,
 } from "../utils/scoring";
-import { deleteFromLeaderboard, clearLeaderboard, OWNER_NAME } from "../utils/leaderboard";
+import { deleteFromLeaderboard, clearLeaderboard, OWNER_NAME, checkLegendaryBadge } from "../utils/leaderboard";
 import { Confetti } from "./Confetti";
 import type { LeaderboardEntry } from "../utils/leaderboard";
 
@@ -729,6 +729,23 @@ export function ResultReveal({
                         <span className={`font-medium truncate block ${entryIsOwner ? "text-amber-400" : ""}`}>
                           {isCurrentPlayer ? entry.name + " (أنت)" : entry.name}
                           {entryIsOwner && <Crown className="w-4 h-4 inline-block mr-1 text-amber-400" />}
+                          {(() => {
+                            const legendary = checkLegendaryBadge(entry.name);
+                            if (legendary.isLegendary) {
+                              return (
+                                <motion.span
+                                  className="inline-flex items-center gap-1 mr-1.5 px-2 py-0.5 bg-gradient-to-r from-purple-600 to-amber-500 rounded-full text-[10px] font-bold text-white border border-purple-400/50"
+                                  initial={{ scale: 0, rotate: -10 }}
+                                  animate={{ scale: 1, rotate: 0 }}
+                                  transition={{ type: "spring", stiffness: 400, damping: 10, delay: 0.5 }}
+                                >
+                                  <Sparkles className="w-3 h-3" />
+                                  أسطوري
+                                </motion.span>
+                              );
+                            }
+                            return null;
+                          })()}
                         </span>
                         <span className="text-xs text-saudi-white/40">
                           {entry.correctAnswers}/20 · {entry.averageTime.toFixed(1)}s
