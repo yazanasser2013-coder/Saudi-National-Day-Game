@@ -19,6 +19,10 @@ import { Confetti } from "./Confetti";
 import { ScorePopup } from "./ScorePopup";
 import { StreakBar } from "./StreakBar";
 import { GeometricTransition } from "./GeometricTransition";
+import { ModeSelect } from "./ModeSelect";
+import { SpeedRound } from "./SpeedRound";
+import { TrueFalse } from "./TrueFalse";
+import { TypingChallenge } from "./TypingChallenge";
 import { calculateScore } from "../utils/scoring";
 import { getLeaderboard, type LeaderboardEntry } from "../utils/leaderboard";
 
@@ -60,6 +64,7 @@ export function GameShell() {
   } | null>(null);
   const [questionTransition, setQuestionTransition] = useState(false);
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isProcessingRef = useRef(false);
   const [particles] = useState(() =>
     Array.from({ length: 15 }, (_, id) => ({
       id,
@@ -96,6 +101,8 @@ export function GameShell() {
       const playerEntry: LeaderboardEntry = {
         id: "current",
         name: state.player.name,
+        mode: state.player.mode,
+        teamNames: state.player.teamNames,
         score: state.score,
         correctAnswers: state.correctAnswers,
         totalQuestions: state.questions.length,
@@ -104,6 +111,7 @@ export function GameShell() {
         percentage: Math.round((state.correctAnswers / state.questions.length) * 100),
         date: new Date().toLocaleDateString("ar-SA"),
         timestamp: Date.now(),
+        gameMode: state.gameMode,
       };
       const rank = board.findIndex((e) => e.id === playerEntry.id) + 1 || board.length + 1;
       return { leaderboardData: board, finalRank: rank };
@@ -124,7 +132,8 @@ export function GameShell() {
 
   const handleAnswer = useCallback(
     (index: number) => {
-      if (showResult || !currentQuestion || advanceTimerRef.current !== null || state.answeredQuestions.some((q) => q.id === currentQuestion.id)) return;
+      if (isProcessingRef.current || showResult || !currentQuestion || advanceTimerRef.current !== null || state.answeredQuestions.some((q) => q.id === currentQuestion.id)) return;
+      isProcessingRef.current = true;
       setSelectedIndex(index);
       setShowResult(true);
       answerQuestion(index);
@@ -175,6 +184,7 @@ export function GameShell() {
 
       advanceTimerRef.current = setTimeout(() => {
         advanceTimerRef.current = null;
+        isProcessingRef.current = false;
         setShowResult(false);
         setSelectedIndex(null);
         setShowPersonality(false);
@@ -203,6 +213,7 @@ export function GameShell() {
     playWrong();
     advanceTimerRef.current = setTimeout(() => {
       advanceTimerRef.current = null;
+      isProcessingRef.current = false;
       setShowResult(false);
       setSelectedIndex(null);
       setShowPersonality(false);
@@ -228,6 +239,7 @@ export function GameShell() {
 
   if (state.gameStatus === "landing") return <LandingScreen />;
   if (state.gameStatus === "join") return <PlayerJoin />;
+  if (state.gameStatus === "mode-select") return <ModeSelect />;
   if (state.gameStatus === "ready")
     return <PreGameChallenge playerName={state.player?.name || "لاعب"} onComplete={startGame} />;
   if (state.gameStatus === "phase-transition")
@@ -255,6 +267,10 @@ export function GameShell() {
         <SoundControl />
       </>
     );
+
+  if (state.gameStatus === "playing" && state.gameMode === "speed-round") return <SpeedRound />;
+  if (state.gameStatus === "playing" && state.gameMode === "true-false") return <TrueFalse />;
+  if (state.gameStatus === "playing" && state.gameMode === "typing-challenge") return <TypingChallenge />;
 
   return (
     <div className="app min-h-screen relative">

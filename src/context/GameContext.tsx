@@ -26,6 +26,7 @@ const initialState: GameState = {
   gameStatus: "landing",
   questionStartedAt: 0,
   soundEnabled: true,
+  gameMode: "quiz",
 };
 
 function gameReducer(state: GameState, action: GameAction): GameState {
@@ -38,10 +39,14 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     }
     case "SET_PLAYER": {
       const name = sanitizeName(action.payload.name);
+      const mode = action.payload.mode || "single";
+      const teamNames = (action.payload.teamNames || []).map(sanitizeName);
       return {
         ...state,
         player: {
           name,
+          mode,
+          teamNames,
           score: 0,
           correctAnswers: 0,
           totalTime: 0,
@@ -52,7 +57,28 @@ function gameReducer(state: GameState, action: GameAction): GameState {
           timeouts: 0,
           wrongAnswers: 0,
         },
-        gameStatus: "ready",
+        gameStatus: "mode-select",
+      };
+    }
+    case "GO_TO_MODE_SELECT": {
+      return {
+        ...state,
+        gameStatus: "mode-select",
+      };
+    }
+    case "SELECT_MODE": {
+      const gameMode = action.payload.gameMode;
+      if (gameMode === "quiz") {
+        return {
+          ...state,
+          gameMode,
+          gameStatus: "ready",
+        };
+      }
+      return {
+        ...state,
+        gameMode,
+        gameStatus: "playing",
       };
     }
     case "START_GAME": {
@@ -174,12 +200,15 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         if (state.player) {
           saveToLeaderboard({
             name: state.player.name,
+            mode: state.player.mode,
+            teamNames: state.player.teamNames,
             score: state.score,
             correctAnswers: state.correctAnswers,
             totalQuestions: state.questions.length,
             averageTime: state.averageAnswerTime,
             fastestAnswer: state.fastestAnswer === Infinity ? 999 : state.fastestAnswer,
             percentage: Math.round((state.correctAnswers / state.questions.length) * 100),
+            gameMode: state.gameMode,
           });
         }
         return { ...state, gameStatus: "results" };
@@ -202,12 +231,15 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       if (state.player) {
         saveToLeaderboard({
           name: state.player.name,
+          mode: state.player.mode,
+          teamNames: state.player.teamNames,
           score: state.score,
           correctAnswers: state.correctAnswers,
-          totalQuestions: state.questions.length,
+          totalQuestions: state.questions.length || 10,
           averageTime: state.averageAnswerTime,
           fastestAnswer: state.fastestAnswer === Infinity ? 999 : state.fastestAnswer,
-          percentage: Math.round((state.correctAnswers / state.questions.length) * 100),
+          percentage: Math.round((state.correctAnswers / (state.questions.length || 10)) * 100),
+          gameMode: state.gameMode,
         });
       }
       return { ...state, gameStatus: "results" };

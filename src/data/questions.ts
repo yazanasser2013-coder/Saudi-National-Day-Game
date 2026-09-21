@@ -25,7 +25,7 @@ export const EASY_POOL: Question[] = [
     difficulty: "easy",
     phase: 1,
     timeLimit: 15,
-    basePoints: 200,
+    basePoints: 150,
     type: "multiple-choice",
   },
   {
@@ -36,7 +36,7 @@ export const EASY_POOL: Question[] = [
     difficulty: "easy",
     phase: 1,
     timeLimit: 15,
-    basePoints: 300,
+    basePoints: 200,
     type: "multiple-choice",
   },
   {
@@ -47,7 +47,7 @@ export const EASY_POOL: Question[] = [
     difficulty: "easy",
     phase: 1,
     timeLimit: 15,
-    basePoints: 400,
+    basePoints: 250,
     type: "multiple-choice",
   },
   {
@@ -58,7 +58,7 @@ export const EASY_POOL: Question[] = [
     difficulty: "easy",
     phase: 1,
     timeLimit: 15,
-    basePoints: 500,
+    basePoints: 300,
     type: "multiple-choice",
   },
 ];
@@ -73,7 +73,7 @@ export const MEDIUM_HARD_POOL: Question[] = [
     difficulty: "hard",
     phase: 2,
     timeLimit: 12,
-    basePoints: 600,
+    basePoints: 350,
     type: "multiple-choice",
   },
   {
@@ -90,7 +90,7 @@ export const MEDIUM_HARD_POOL: Question[] = [
     difficulty: "hard",
     phase: 2,
     timeLimit: 12,
-    basePoints: 750,
+    basePoints: 400,
     type: "multiple-choice",
   },
   {
@@ -107,7 +107,7 @@ export const MEDIUM_HARD_POOL: Question[] = [
     difficulty: "hard",
     phase: 2,
     timeLimit: 12,
-    basePoints: 900,
+    basePoints: 450,
     type: "multiple-choice",
   },
   {
@@ -119,7 +119,7 @@ export const MEDIUM_HARD_POOL: Question[] = [
     difficulty: "hard",
     phase: 2,
     timeLimit: 12,
-    basePoints: 1100,
+    basePoints: 500,
     type: "multiple-choice",
   },
   {
@@ -131,7 +131,7 @@ export const MEDIUM_HARD_POOL: Question[] = [
     difficulty: "hard",
     phase: 2,
     timeLimit: 12,
-    basePoints: 1300,
+    basePoints: 550,
     type: "multiple-choice",
   },
 ];
@@ -151,7 +151,7 @@ export const FINAL_POOL: Question[] = [
     difficulty: "extreme",
     phase: 3,
     timeLimit: 10,
-    basePoints: 1500,
+    basePoints: 600,
     type: "multiple-choice",
   },
   {
@@ -168,7 +168,7 @@ export const FINAL_POOL: Question[] = [
     difficulty: "extreme",
     phase: 3,
     timeLimit: 10,
-    basePoints: 1750,
+    basePoints: 650,
     type: "multiple-choice",
   },
   {
@@ -180,7 +180,7 @@ export const FINAL_POOL: Question[] = [
     difficulty: "extreme",
     phase: 3,
     timeLimit: 10,
-    basePoints: 2000,
+    basePoints: 700,
     type: "multiple-choice",
   },
   {
@@ -197,7 +197,7 @@ export const FINAL_POOL: Question[] = [
     difficulty: "extreme",
     phase: 3,
     timeLimit: 10,
-    basePoints: 2250,
+    basePoints: 750,
     type: "multiple-choice",
   },
   {
@@ -209,7 +209,7 @@ export const FINAL_POOL: Question[] = [
     difficulty: "extreme",
     phase: 3,
     timeLimit: 10,
-    basePoints: 2500,
+    basePoints: 800,
     type: "multiple-choice",
   },
   {
@@ -221,7 +221,7 @@ export const FINAL_POOL: Question[] = [
     difficulty: "extreme",
     phase: 3,
     timeLimit: 10,
-    basePoints: 2750,
+    basePoints: 850,
     type: "multiple-choice",
   },
   {
@@ -238,7 +238,7 @@ export const FINAL_POOL: Question[] = [
     difficulty: "extreme",
     phase: 3,
     timeLimit: 10,
-    basePoints: 3000,
+    basePoints: 900,
     type: "multiple-choice",
   },
   {
@@ -255,7 +255,7 @@ export const FINAL_POOL: Question[] = [
     difficulty: "extreme",
     phase: 3,
     timeLimit: 10,
-    basePoints: 3500,
+    basePoints: 950,
     type: "multiple-choice",
   },
   {
@@ -263,7 +263,7 @@ export const FINAL_POOL: Question[] = [
     question:
       "ما هو اسم أول صحفية سعودية حصلت على ملكية صحيفة في المملكة؟",
     answers: [
-      "سميرة baiseer",
+      "سميرة breeze",
       "رنا الحمود",
       "فاطمة الهاجري",
       "هند الشايف",
@@ -272,7 +272,7 @@ export const FINAL_POOL: Question[] = [
     difficulty: "extreme",
     phase: 3,
     timeLimit: 10,
-    basePoints: 4000,
+    basePoints: 1000,
     type: "multiple-choice",
   },
   {
@@ -289,7 +289,7 @@ export const FINAL_POOL: Question[] = [
     difficulty: "extreme",
     phase: 3,
     timeLimit: 10,
-    basePoints: 5000,
+    basePoints: 1100,
     type: "multiple-choice",
   },
 ];

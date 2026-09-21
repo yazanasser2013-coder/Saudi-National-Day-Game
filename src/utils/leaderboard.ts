@@ -4,6 +4,8 @@ const MAX_ENTRIES = 50;
 export interface LeaderboardEntry {
   id: string;
   name: string;
+  mode: "single" | "team";
+  teamNames: string[];
   score: number;
   correctAnswers: number;
   totalQuestions: number;
@@ -12,6 +14,7 @@ export interface LeaderboardEntry {
   percentage: number;
   date: string;
   timestamp: number;
+  gameMode: string;
 }
 
 export function getLeaderboard(): LeaderboardEntry[] {

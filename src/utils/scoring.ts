@@ -46,4 +46,4 @@ export function getPerformanceTitle(
   return { title: "مبتدئ", emoji: "🌱" };
 }
 
-export const MAX_POSSIBLE_SCORE = 26300;
+export const MAX_POSSIBLE_SCORE = 23100;
