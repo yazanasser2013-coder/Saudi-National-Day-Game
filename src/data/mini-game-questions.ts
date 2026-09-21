@@ -1,4 +1,4 @@
-import type { TrueFalseQuestion, TypingQuestion } from "../types/game";
+import type { TrueFalseQuestion, TypingQuestion, SortQuestion } from "../types/game";
 
 export const TRUE_FALSE_QUESTIONS: TrueFalseQuestion[] = [
   { id: "TF01", statement: "اليوم الوطني السعودي يُحتفل به في 23 سبتمبر", isTrue: false, difficulty: "easy", basePoints: 200 },
@@ -43,5 +43,93 @@ export function getShuffledTrueFalse(count: number = 15): TrueFalseQuestion[] {
 
 export function getShuffledTyping(count: number = 10): TypingQuestion[] {
   const shuffled = [...TYPING_QUESTIONS].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, count);
+}
+
+export const SORT_QUESTIONS: SortQuestion[] = [
+  {
+    id: "SO01",
+    instruction: "رتب الأحداث من الأقدم إلى الأحدث",
+    items: ["تأسيس المملكة", "اكتشاف النفط", "نظام المناطق الإدارية", "أول جامعة حكومية"],
+    correctOrder: [0, 1, 3, 2],
+    difficulty: "easy",
+    basePoints: 200,
+  },
+  {
+    id: "SO02",
+    instruction: "رتب الملوك حسب ترتيب الحكم",
+    items: ["الملك فهد", "الملك عبدالعزيز", "الملك سلمان", "الملك عبدالله"],
+    correctOrder: [1, 0, 3, 2],
+    difficulty: "easy",
+    basePoints: 200,
+  },
+  {
+    id: "SO03",
+    instruction: "رتب الأحداث من الأقدم إلى الأحدث",
+    items: ["توحيد الحجاز", "فتح الرياض", "استعادة الأحساء", "توحيد نجد والحجاز"],
+    correctOrder: [2, 1, 0, 3],
+    difficulty: "hard",
+    basePoints: 300,
+  },
+  {
+    id: "SO04",
+    instruction: "رتب المنشآت حسب تاريخ الإنشاء",
+    items: ["جامعة الملك سعود", "أول خط بحري", "أول بئر نفطية", "أول صحيفة سعودية"],
+    correctOrder: [2, 1, 3, 0],
+    difficulty: "hard",
+    basePoints: 300,
+  },
+  {
+    id: "SO05",
+    instruction: "رتب الأحداث من الأقدم إلى الأحدث",
+    items: ["إعلان التوحيد", "معركة جزيرة النعيم", "استرداد الأحساء", "تأسيس نجد"],
+    correctOrder: [3, 2, 1, 0],
+    difficulty: "easy",
+    basePoints: 200,
+  },
+  {
+    id: "SO06",
+    instruction: "رتب الإنجازات حسب تاريخ الإنجاز",
+    items: ["شبكة الطرق السريعة", "الأولمبياد الخاص", " Metro الرياض", "نيوم"],
+    correctOrder: [0, 1, 2, 3],
+    difficulty: "hard",
+    basePoints: 300,
+  },
+  {
+    id: "SO07",
+    instruction: "رتب الملوك من أول إلى آخر",
+    items: ["الملك عبدالله", "الملك سلمان", "الملك فهد", "الملك عبدالعزيز"],
+    correctOrder: [3, 2, 0, 1],
+    difficulty: "easy",
+    basePoints: 200,
+  },
+  {
+    id: "SO08",
+    instruction: "رتب الأحداث من الأقدم إلى الأحدث",
+    items: ["تأسيس هيئة الترفيه", "رؤية 2030", "افتتاح برج المملكة", "أول رحلة فضائية سعودية"],
+    correctOrder: [2, 1, 0, 3],
+    difficulty: "hard",
+    basePoints: 300,
+  },
+  {
+    id: "SO09",
+    instruction: "رتب الكيانات حسب تاريخ التأسيس",
+    items: ["هيئة الاتصالات", "الهيئة العامة للترفيه", "صندوق الاستثمارات العامة", "نيوم"],
+    correctOrder: [0, 2, 1, 3],
+    difficulty: "hard",
+    basePoints: 300,
+  },
+  {
+    id: "SO10",
+    instruction: "رتب الأحداث من الأقدم إلى الأحدث",
+    items: ["توحيد نجد", "توحيد الحجاز", "التوحيد الكامل", "نظامAreas"],
+    correctOrder: [0, 1, 2, 3],
+    difficulty: "easy",
+    basePoints: 200,
+  },
+];
+
+export function getShuffledSort(count: number = 10): SortQuestion[] {
+  const shuffled = [...SORT_QUESTIONS].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, count);
 }

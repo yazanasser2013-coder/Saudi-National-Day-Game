@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Trophy, Zap, Check, Keyboard, ArrowLeft } from "lucide-react";
+import { Trophy, ListOrdered, Check, Keyboard, ArrowLeft } from "lucide-react";
 import { useGame } from "../context/game-context";
 import { useAudio } from "../hooks/useAudio";
 import type { GameMode } from "../types/game";
@@ -18,16 +18,16 @@ const modes = [
     badgeColor: "bg-saudi-emerald/20 text-saudi-emerald",
   },
   {
-    id: "speed-round" as GameMode,
-    title: "السبرعة",
-    description: "10 أسئلة، 30 ثانية فقط",
-    icon: Zap,
-    color: "from-amber-500/20 to-red-500/20",
-    borderColor: "border-amber-500/40",
+    id: "sort-challenge" as GameMode,
+    title: "ترتيب",
+    description: "رتب العناصر في الترتيب الصحيح",
+    icon: ListOrdered,
+    color: "from-amber-500/20 to-emerald-500/20",
+    borderColor: "border-saudi-gold/40",
     iconColor: "text-amber-400",
-    glow: "hover:shadow-[0_0_40px_rgba(217,165,0,0.3)]",
-    badge: "سريع",
-    badgeColor: "bg-amber-500/20 text-amber-400",
+    glow: "hover:shadow-[0_0_40px_rgba(201,162,39,0.3)]",
+    badge: "ترتيب",
+    badgeColor: "bg-saudi-gold/20 text-amber-400",
   },
   {
     id: "true-false" as GameMode,
@@ -46,12 +46,12 @@ const modes = [
     title: "تحدي الكتابة",
     description: "اكتب الإجابة بالعربية",
     icon: Keyboard,
-    color: "from-purple-500/20 to-blue-500/20",
-    borderColor: "border-purple-500/40",
-    iconColor: "text-purple-400",
-    glow: "hover:shadow-[0_0_40px_rgba(168,85,247,0.3)]",
+    color: "from-emerald-500/20 to-amber-500/20",
+    borderColor: "border-saudi-emerald/40",
+    iconColor: "text-saudi-emerald",
+    glow: "hover:shadow-[0_0_40px_rgba(11,140,56,0.3)]",
     badge: "تحدي",
-    badgeColor: "bg-purple-500/20 text-purple-400",
+    badgeColor: "bg-saudi-emerald/20 text-saudi-emerald",
   },
 ];
 

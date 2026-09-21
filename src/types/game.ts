@@ -1,4 +1,4 @@
-export type GameMode = "quiz" | "speed-round" | "true-false" | "typing-challenge";
+export type GameMode = "quiz" | "sort-challenge" | "true-false" | "typing-challenge";
 
 export interface Question {
   id: string;
@@ -24,6 +24,15 @@ export interface TypingQuestion {
   id: string;
   question: string;
   acceptedAnswers: string[];
+  difficulty: "easy" | "hard";
+  basePoints: number;
+}
+
+export interface SortQuestion {
+  id: string;
+  instruction: string;
+  items: string[];
+  correctOrder: number[];
   difficulty: "easy" | "hard";
   basePoints: number;
 }

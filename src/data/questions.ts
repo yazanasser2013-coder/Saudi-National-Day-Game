@@ -296,12 +296,21 @@ export const FINAL_POOL: Question[] = [
 
 export const ALL_QUESTIONS = [...EASY_POOL, ...MEDIUM_HARD_POOL, ...FINAL_POOL];
 
+function shuffleAnswers(questions: Question[]): Question[] {
+  return questions.map((q) => {
+    const correctAnswerText = q.answers[q.correctAnswer];
+    const shuffled = [...q.answers].sort(() => Math.random() - 0.5);
+    const newCorrectIndex = shuffled.indexOf(correctAnswerText);
+    return { ...q, answers: shuffled, correctAnswer: newCorrectIndex };
+  });
+}
+
 export function getShuffledPhase1(): Question[] {
-  return [...EASY_POOL].sort(() => Math.random() - 0.5);
+  return shuffleAnswers([...EASY_POOL].sort(() => Math.random() - 0.5));
 }
 export function getShuffledPhase2(): Question[] {
-  return [...MEDIUM_HARD_POOL].sort(() => Math.random() - 0.5);
+  return shuffleAnswers([...MEDIUM_HARD_POOL].sort(() => Math.random() - 0.5));
 }
 export function getGameQuestions(): Question[] {
-  return [...getShuffledPhase1(), ...getShuffledPhase2(), ...FINAL_POOL];
+  return [...getShuffledPhase1(), ...getShuffledPhase2(), ...shuffleAnswers([...FINAL_POOL])];
 }

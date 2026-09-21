@@ -20,7 +20,7 @@ import { ScorePopup } from "./ScorePopup";
 import { StreakBar } from "./StreakBar";
 import { GeometricTransition } from "./GeometricTransition";
 import { ModeSelect } from "./ModeSelect";
-import { SpeedRound } from "./SpeedRound";
+import { SortChallenge } from "./SortChallenge";
 import { TrueFalse } from "./TrueFalse";
 import { TypingChallenge } from "./TypingChallenge";
 import { calculateScore } from "../utils/scoring";
@@ -294,7 +294,7 @@ export function GameShell() {
       </>
     );
 
-  if (state.gameStatus === "playing" && state.gameMode === "speed-round") return <SpeedRound />;
+  if (state.gameStatus === "playing" && state.gameMode === "sort-challenge") return <SortChallenge />;
   if (state.gameStatus === "playing" && state.gameMode === "true-false") return <TrueFalse />;
   if (state.gameStatus === "playing" && state.gameMode === "typing-challenge") return <TypingChallenge />;
 
