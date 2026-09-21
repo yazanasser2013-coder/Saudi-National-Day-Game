@@ -9,8 +9,52 @@ import { calculateScore, sanitizeName } from "../utils/scoring";
 import { GameContext } from "./game-context";
 import { saveToLeaderboard, isOwner as checkIsOwner } from "../utils/leaderboard";
 
+const PLAYER_KEY = "saudi-natday-player";
+
+function loadSavedPlayer(): GameState["player"] {
+  try {
+    const raw = localStorage.getItem(PLAYER_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (data && data.name) {
+      return {
+        ...data,
+        isOwner: checkIsOwner(data.name),
+        score: 0,
+        correctAnswers: 0,
+        totalTime: 0,
+        averageTime: 0,
+        fastestAnswer: Infinity,
+        responseTimes: [],
+        answeredQuestions: [],
+        timeouts: 0,
+        wrongAnswers: 0,
+      };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function savePlayer(player: GameState["player"]) {
+  if (player) {
+    localStorage.setItem(PLAYER_KEY, JSON.stringify({
+      name: player.name,
+      mode: player.mode,
+      teamNames: player.teamNames,
+    }));
+  }
+}
+
+function clearSavedPlayer() {
+  localStorage.removeItem(PLAYER_KEY);
+}
+
+const savedPlayer = loadSavedPlayer();
+
 const initialState: GameState = {
-  player: null,
+  player: savedPlayer,
   currentQuestionIndex: 0,
   questions: [],
   phase: 1,
@@ -23,7 +67,7 @@ const initialState: GameState = {
   wrongAnswers: 0,
   fastestAnswer: Infinity,
   averageAnswerTime: 0,
-  gameStatus: "landing",
+  gameStatus: savedPlayer ? "mode-select" : "landing",
   questionStartedAt: 0,
   soundEnabled: true,
   gameMode: "quiz",
@@ -41,23 +85,25 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       const name = sanitizeName(action.payload.name);
       const mode = action.payload.mode || "single";
       const teamNames = (action.payload.teamNames || []).map(sanitizeName);
+      const player = {
+        name,
+        isOwner: checkIsOwner(name),
+        mode,
+        teamNames,
+        score: 0,
+        correctAnswers: 0,
+        totalTime: 0,
+        averageTime: 0,
+        fastestAnswer: Infinity,
+        responseTimes: [],
+        answeredQuestions: [],
+        timeouts: 0,
+        wrongAnswers: 0,
+      };
+      savePlayer(player);
       return {
         ...state,
-        player: {
-          name,
-          isOwner: checkIsOwner(name),
-          mode,
-          teamNames,
-          score: 0,
-          correctAnswers: 0,
-          totalTime: 0,
-          averageTime: 0,
-          fastestAnswer: Infinity,
-          responseTimes: [],
-          answeredQuestions: [],
-          timeouts: 0,
-          wrongAnswers: 0,
-        },
+        player,
         gameStatus: "mode-select",
       };
     }
@@ -267,7 +313,13 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       return { ...state, gameStatus: "results" };
     }
     case "RESET_GAME":
-      return { ...initialState, soundEnabled: state.soundEnabled };
+      clearSavedPlayer();
+      return {
+        ...initialState,
+        player: null,
+        gameStatus: "landing",
+        soundEnabled: state.soundEnabled,
+      };
     case "TOGGLE_SOUND":
       return { ...state, soundEnabled: !state.soundEnabled };
     case "SET_LEADERBOARD":
