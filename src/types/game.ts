@@ -71,6 +71,7 @@ export interface GameState {
     | "landing"
     | "join"
     | "mode-select"
+    | "tutorial"
     | "ready"
     | "playing"
     | "phase-transition"
@@ -99,6 +100,7 @@ export type GameAction =
   | { type: "GO_TO_JOIN" }
   | { type: "SET_PLAYER"; payload: { name: string; mode?: "single" | "team"; teamNames?: string[] } }
   | { type: "GO_TO_MODE_SELECT" }
+  | { type: "GO_TO_TUTORIAL" }
   | { type: "SELECT_MODE"; payload: { gameMode: GameMode } }
   | { type: "START_GAME" }
   | { type: "START_QUESTION"; payload: { question: Question } }

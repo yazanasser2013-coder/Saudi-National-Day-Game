@@ -113,19 +113,18 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         gameStatus: "mode-select",
       };
     }
+    case "GO_TO_TUTORIAL": {
+      return {
+        ...state,
+        gameStatus: "tutorial",
+      };
+    }
     case "SELECT_MODE": {
       const gameMode = action.payload.gameMode;
-      if (gameMode === "quiz") {
-        return {
-          ...state,
-          gameMode,
-          gameStatus: "ready",
-        };
-      }
       return {
         ...state,
         gameMode,
-        gameStatus: "playing",
+        gameStatus: "tutorial",
       };
     }
     case "START_GAME": {

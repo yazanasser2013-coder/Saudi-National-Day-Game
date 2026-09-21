@@ -23,6 +23,7 @@ import { ModeSelect } from "./ModeSelect";
 import { SortChallenge } from "./SortChallenge";
 import { TrueFalse } from "./TrueFalse";
 import { TypingChallenge } from "./TypingChallenge";
+import { GameTutorial } from "./GameTutorial";
 import { calculateScore } from "../utils/scoring";
 import { getLeaderboard, type LeaderboardEntry } from "../utils/leaderboard";
 
@@ -266,6 +267,20 @@ export function GameShell() {
   if (state.gameStatus === "landing") return <LandingScreen />;
   if (state.gameStatus === "join") return <PlayerJoin />;
   if (state.gameStatus === "mode-select") return <ModeSelect />;
+  if (state.gameStatus === "tutorial")
+    return (
+      <GameTutorial
+        gameMode={state.gameMode}
+        onBack={() => dispatch({ type: "GO_TO_MODE_SELECT" })}
+        onStart={() => {
+          if (state.gameMode === "quiz") {
+            dispatch({ type: "START_GAME" });
+          } else {
+            dispatch({ type: "START_GAME" });
+          }
+        }}
+      />
+    );
   if (state.gameStatus === "ready")
     return <PreGameChallenge playerName={state.player?.name || "لاعب"} onComplete={startGame} />;
   if (state.gameStatus === "phase-transition")
